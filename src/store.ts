@@ -1,7 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {reducer} from './reducers';
 
-export type State = LoadingState | LoadedState;
+import { createEpicMiddleware } from 'redux-observable';
+
+import { rootEpic} from './epics';
+
+export type State = LoadingState | LoadedState | ErrorState;
 
 export interface LoadingState {
     type: "loading",
@@ -11,6 +15,16 @@ export interface LoadedState {
     type: "loaded"
 }
 
+export interface ErrorState {
+    type: "error",
+    message: string,
+}
+
 export const initialState: State = {type: "loading"};
 
-export const store = configureStore({reducer});
+const epicMiddleware = createEpicMiddleware();
+export const store = configureStore({
+    reducer,
+    middleware: [epicMiddleware],
+});
+epicMiddleware.run(rootEpic);

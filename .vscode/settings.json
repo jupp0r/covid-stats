@@ -1,0 +1,10 @@
+{
+    "prettier.arrowParens": "avoid",
+    "prettier.endOfLine": "auto",
+    "prettier.packageManager": "yarn",
+    "prettier.proseWrap": "always",
+    "prettier.trailingComma": "all",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true
+}

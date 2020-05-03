@@ -1,11 +1,25 @@
-import { Observable } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
+import { fromFetch } from 'rxjs/fetch';
 
-import { filter, mapTo, delay } from 'rxjs/operators';
+import { filter, switchMap, flatMap, map} from 'rxjs/operators';
 
-import { Action } from './actions';
+import { Action, makeErrorDuringFetch, makeFetchSuccess } from './actions';
+
+import { combineEpics } from 'redux-observable';
+
 
 export const startLoadingEpic = (action$: Observable<Action>): Observable<Action> => action$.pipe(
     filter((action: Action) => action.type === 'initialized'),
-    delay(1000),
-    mapTo({ type: 'initialized' })
+    flatMap(() => fromFetch("https://covid.ourworldindata.org/data/owid-covid-data.csv")),
+    switchMap((response: Response) => {
+        if (response.ok) {
+          return from(response.text).pipe(map(makeFetchSuccess))
+        } else {
+          return of(makeErrorDuringFetch(`Error ${response.status}`));
+        }
+      })
+);
+
+export const rootEpic = combineEpics(
+  startLoadingEpic
 );
