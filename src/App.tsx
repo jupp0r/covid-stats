@@ -1,8 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { makeInitialized } from './actions'
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+import { State } from './store';
+
+function App(props: { makeInitialized: () => void }) {
+  props.makeInitialized();
+
   return (
     <div className="App">
       <header className="App-header">
@@ -23,4 +29,4 @@ function App() {
   );
 }
 
-export default App;
+export default connect((state: State): State => state, { makeInitialized })(App);
