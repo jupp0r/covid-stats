@@ -1,32 +1,35 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { makeInitialized } from './actions'
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { connect } from "react-redux";
+import { makeInitialized } from "./actions";
+import "./App.css";
 
-import { State } from './store';
+import { State, ErrorState, LoadedState } from "./store";
 
-function App(props: { makeInitialized: () => void }) {
-  props.makeInitialized();
+import { Loading } from "./Loading";
+import { Loaded } from "./Loaded";
+import { Error } from "./Error";
 
+import { assertNever } from "./utils";
+
+function App(props: { store: State }) {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {((store: State) => {
+        switch (store.type) {
+          case "loading":
+            return <Loading />;
+          case "loaded":
+            return <Loaded store={props.store as LoadedState} />;
+          case "error":
+            return <Error store={props.store as ErrorState} />;
+          default:
+            return assertNever(store);
+        }
+      })(props.store)}
     </div>
   );
 }
 
-export default connect((state: State): State => state, { makeInitialized })(App);
+export default connect((state: State): State => state, { makeInitialized })(
+  App,
+);

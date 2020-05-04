@@ -1,29 +1,33 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
 
-import { Provider, connect } from 'react-redux'
-import { State, store } from './store'
+import { Provider, connect } from "react-redux";
+import { State, store } from "./store";
+import { bindActionCreators, Dispatch } from "redux";
 
-const mapStateToProps = (state: State) => state;
+import { Action } from "./actions";
 
-const mapDispatchToProps = {};
+const mapStateToProps = (store: State) => ({
+  store,
+});
 
-const connectToStore = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return bindActionCreators({}, dispatch);
+};
+
+const connectToStore = connect(mapStateToProps, mapDispatchToProps);
 
 const ConnectedComponent = connectToStore(App);
 
-const rootElement = document.getElementById('root')
+const rootElement = document.getElementById("root");
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
       <ConnectedComponent />
-    </React.StrictMode>,
-    document.getElementById('root')
-  </Provider>
-  , rootElement);
+    </React.StrictMode>
+  </Provider>,
+  rootElement,
+);

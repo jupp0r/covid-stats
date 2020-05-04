@@ -3,7 +3,11 @@ import {reducer} from './reducers';
 
 import { createEpicMiddleware } from 'redux-observable';
 
-import { rootEpic} from './epics';
+import { rootEpic } from './epics';
+
+import { makeInitialized } from './actions'
+
+import { DataFrame } from 'dataframe-js';
 
 export type State = LoadingState | LoadedState | ErrorState;
 
@@ -12,7 +16,8 @@ export interface LoadingState {
 }
 
 export interface LoadedState {
-    type: "loaded"
+    type: "loaded",
+    data: DataFrame,
 }
 
 export interface ErrorState {
@@ -28,3 +33,5 @@ export const store = configureStore({
     middleware: [epicMiddleware],
 });
 epicMiddleware.run(rootEpic);
+
+store.dispatch(makeInitialized());
