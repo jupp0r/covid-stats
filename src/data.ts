@@ -1,13 +1,72 @@
-import { DataFrame } from 'dataframe-js';
-import { Observable, from } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { fromCSV, IDataFrame, Series } from 'data-forge';
 
-export const parseCSV = (data: string): Observable<DataFrame> =>
-    from(DataFrame.fromCSV(new File([data], "data.csv")) as Promise<DataFrame>).pipe(
-        map((df: DataFrame): DataFrame => df.cast('date', (dateString: string) => Date.parse(dateString))),
-        map((df: DataFrame): DataFrame => df.cast('total_cases', Number)),
-    ) as Observable<DataFrame>;
+interface CovidRow {
+    iso_code: string,
+}
 
-export const transformCsvData = (data: DataFrame): DataFrame => {
-    return data.filter((row: any) => row.get("iso_code") === "USA");
+interface PopulationRow {
+    "iso_code": string,
+    "population": string,
+    "year": number,
+}
+
+export const parseCovidCSV = (data: string): Observable<IDataFrame> =>
+    of(fromCSV(data))
+        .pipe(
+            map((df: IDataFrame): IDataFrame => df.parseDates('date', "MM/DD/YY")),
+            map((df: IDataFrame): IDataFrame => df.parseInts('total_cases')),
+        );
+
+export const parsePopulationCSV = (data: string): Observable<IDataFrame> =>
+    of(fromCSV(data))
+        .pipe(
+            map(
+                (df: IDataFrame): IDataFrame => df.parseInts(['Value', 'Year'])
+            ),
+            map((df: IDataFrame): IDataFrame => df.renameSeries({
+                "Year": "year",
+                "Country Code": "iso_code",
+                "Value": "population",
+            }))
+        );
+
+export const transformCsvData = (data: IDataFrame): IDataFrame => {
+    return data.where((row: CovidRow) => row.iso_code === "USA");
+};
+
+type Maximums = Map<string, number>;
+
+type Accumulator = {
+    maximums: Maximums,
+    result: IDataFrame,
+}
+
+const computeLatestPopulation = (population: IDataFrame): IDataFrame =>
+    population
+        .groupBy(row => row.iso_code)
+        .select(group => {
+            const { year: maxYear } = group.summarize({ year: Series.max });
+            const pop = group.where(row => row.year === maxYear).first().population;
+            return {
+                iso_code: group.first().iso_code,
+                population: pop,
+            };
+        }).inflate();
+
+export const mergeCovidPopulation = (covid: IDataFrame, population: IDataFrame): IDataFrame => {
+    const populationLatest = computeLatestPopulation(population);
+    console.log(populationLatest.toArray());
+    return covid.joinOuterRight(
+        populationLatest,
+        (covid: CovidRow) => covid.iso_code,
+        (pop: PopulationRow) => pop.iso_code,
+        (covid: CovidRow, pop: PopulationRow | null) => (
+            {
+                ...covid,
+                population: pop ? pop.population : 0
+            }
+        )
+    );
 };

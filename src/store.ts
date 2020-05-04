@@ -7,7 +7,7 @@ import { rootEpic } from './epics';
 
 import { makeInitialized } from './actions'
 
-import { DataFrame } from 'dataframe-js';
+import { IDataFrame } from 'data-forge';
 
 export type State = LoadingState | LoadedState | ErrorState;
 
@@ -17,7 +17,7 @@ export interface LoadingState {
 
 export interface LoadedState {
     type: "loaded",
-    data: DataFrame,
+    data: IDataFrame,
 }
 
 export interface ErrorState {

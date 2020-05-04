@@ -11,7 +11,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "dataframe-js": "jupp0r/dataframe-js#patch-1",
+    "data-forge": "^1.8.5",
     "highcharts": "^8.0.4",
     "highcharts-react": "^0.0.3",
     "highcharts-react-official": "^3.0.0",
@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@types/papaparse": "^5.0.3",
     "@types/react-redux": "^7.1.7"
   }
 }
