@@ -15,6 +15,7 @@ export interface LoadingState {
 
 export interface UIState {
     pickedCountries: string[],
+    searchText: string,
 }
 
 export interface LoadedState {

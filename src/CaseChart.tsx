@@ -17,7 +17,7 @@ const selectDataToRenderIntoChart = (
     data: state.data
       .where(row => row.iso_code === pickedCountry)
       .toArray()
-      .map(row => [row.date, row.total_cases]),
+      .map(row => [row.date.getTime(), row.total_cases]),
     type: "line",
   }));
 
@@ -30,10 +30,6 @@ export const CaseChart = () => {
     },
     xAxis: {
       type: "datetime",
-      dateTimeLabelFormats: {
-        month: "%e. %b",
-        year: "%b",
-      },
       title: {
         text: "Date",
       },
