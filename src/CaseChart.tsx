@@ -4,17 +4,20 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { LoadedState } from "./store";
 import { useSelector } from "react-redux";
-import { includes } from "lodash/fp";
 
-const selectDataToRenderIntoChart = (state: LoadedState) =>
-  Object.entries(
-    state.data
-      .where(row => includes(row.iso_code)(state.ui.pickedCountries))
-      .toObject(
-        row => row.date,
-        row => row.total_cases,
-      ),
-  );
+const selectDataToRenderIntoChart = (
+  state: LoadedState,
+): {
+  name: string;
+  series: [Date, number][];
+}[] =>
+  state.ui.pickedCountries.map((pickedCountry: string) => ({
+    name: pickedCountry,
+    series: state.data
+      .where(row => row.iso_code === pickedCountry)
+      .toArray()
+      .map(row => [row.date, row.total_cases]),
+  }));
 
 export const CaseChart = () => {
   const cases = useSelector(selectDataToRenderIntoChart);

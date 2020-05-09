@@ -15,7 +15,7 @@ interface PopulationRow {
 export const parseCovidCSV = (data: string): Observable<IDataFrame> =>
     of(fromCSV(data))
         .pipe(
-            map((df: IDataFrame): IDataFrame => df.parseDates('date', "MM/DD/YY")),
+            map((df: IDataFrame): IDataFrame => df.parseDates('date')),
             map((df: IDataFrame): IDataFrame => df.parseInts('total_cases')),
         );
 
