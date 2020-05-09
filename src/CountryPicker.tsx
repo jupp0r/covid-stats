@@ -1,15 +1,13 @@
-import React, { ChangeEvent } from "react";
+import React, { CSSProperties } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { LoadedState } from "./store";
 
-export const CountryPicker = ({
-  store,
-  makeCountrySelectedAction,
-}: {
-  store: LoadedState;
-  makeCountrySelectedAction: (countries: string[]) => void;
-}) => {
-  const allCoutries = store.data
+import { includes } from "lodash/fp";
+import { makeCountrySelectedAction } from "./actions";
+
+const allCoutrySelector = (state: LoadedState) =>
+  state.data
     .select(
       ({ iso_code, location }: { iso_code: string; location: string }) => ({
         iso_code,
@@ -18,31 +16,34 @@ export const CountryPicker = ({
     )
     .distinct(row => row.iso_code)
     .toPairs()
-    .map(
-      ([_, { iso_code, location }]: [
-        number,
-        { iso_code: string; location: string },
-      ]) => <option key={iso_code}>{location}</option>,
-    );
+    .map(([_, row]) => ({
+      ...row,
+      active: includes(row.iso_code)(state.ui.pickedCountries),
+    }));
 
+export const CountryPicker = () => {
+  const dispatch = useDispatch();
+
+  const boldIfSelected = (selected: boolean): CSSProperties => ({
+    fontWeight: selected ? "bold" : "normal",
+  });
+
+  const allCountries = useSelector(allCoutrySelector).map(
+    ({ iso_code, location, active }) => (
+      <li
+        key={iso_code}
+        style={boldIfSelected(active)}
+        onClick={_ => dispatch(makeCountrySelectedAction(iso_code))}
+      >
+        {location}
+      </li>
+    ),
+  );
   return (
     <div>
       <label>
         Country Picker
-        <select
-          name="countries"
-          multiple
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            makeCountrySelectedAction(
-              Array.from(e.target.selectedOptions).map(
-                (elem: HTMLOptionElement) => elem.id,
-              ),
-            )
-          }
-          defaultValue={store.ui.pickedCountries}
-        >
-          {allCoutries}
-        </select>
+        <ul id="countries">{allCountries}</ul>
       </label>
     </div>
   );

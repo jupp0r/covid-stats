@@ -41,12 +41,12 @@ export const makeFetchSuccess = (response: IDataFrame): FetchSuccessAction => (
 
 export interface CountrySelectedAction {
     type: "country-selected",
-    countryCodes: string[],
+    countryCode: string,
 }
-export const makeCountrySelectedAction = (countryCodes: string[]): CountrySelectedAction => (
+export const makeCountrySelectedAction = (countryCode: string): CountrySelectedAction => (
     {
         type: "country-selected",
-        countryCodes,
+        countryCode,
     }  
 );
 

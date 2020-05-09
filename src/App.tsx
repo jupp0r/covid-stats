@@ -1,9 +1,8 @@
 import React from "react";
-import { connect } from "react-redux";
-import { mapDispatchToProps, makeCountrySelectedAction } from "./actions";
+import { useSelector } from "react-redux";
 import "./App.css";
 
-import { State, ErrorState, LoadedState } from "./store";
+import { State } from "./store";
 
 import { Loading } from "./Loading";
 import { Loaded } from "./Loaded";
@@ -11,31 +10,22 @@ import { Error } from "./Error";
 
 import { assertNever } from "./utils";
 
-function App(props: {
-  store: State;
-  makeCountriesSelectedAction: (countries: string[]) => void;
-}) {
+export const App = () => {
+  const state: State = useSelector<State, State>(_ => _);
   return (
     <div className="App">
-      {((store: State) => {
-        switch (store.type) {
+      {((state: State) => {
+        switch (state.type) {
           case "loading":
             return <Loading />;
           case "loaded":
-            return (
-              <Loaded
-                store={props.store as LoadedState}
-                makeCountriesSelectedAction={makeCountrySelectedAction}
-              />
-            );
+            return <Loaded />;
           case "error":
-            return <Error store={props.store as ErrorState} />;
+            return <Error />;
           default:
-            return assertNever(store);
+            return assertNever(state);
         }
-      })(props.store)}
+      })(state)}
     </div>
   );
-}
-
-export default connect((state: State): State => state, mapDispatchToProps)(App);
+};

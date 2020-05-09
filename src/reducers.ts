@@ -5,6 +5,8 @@ import { transformCsvData } from "./data";
 
 import { assertNever } from "./utils";
 
+import { includes } from 'lodash/fp';
+
 const errorReducer = (state: State, action: Action): State => state;
 
 const loadingReducer = (state: State, action: Action): State => {
@@ -25,10 +27,25 @@ const loadingReducer = (state: State, action: Action): State => {
 const loadedReducer = (state: LoadedState, action: Action): State => {
     switch (action.type) {
         case "country-selected":
+             const maybeAddCountryToPicked = (
+               country: string,
+               countries: string[],
+             ): string[] => {
+               if (includes(country)(countries)) {
+                 return countries;
+               }
+
+               return [country, ...countries];
+             };
+            
             return {
                 ...state,
                 ui:
-                    { ...state.ui, pickedCountries: state.ui.pickedCountries }
+                {
+                    ...state.ui,
+                    pickedCountries:
+                        maybeAddCountryToPicked(action.countryCode, state.ui.pickedCountries),
+                }
             };
         default:
             return state;

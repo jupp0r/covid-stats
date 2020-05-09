@@ -3,14 +3,21 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { LoadedState } from "./store";
+import { useSelector } from "react-redux";
+import { includes } from "lodash/fp";
 
-export const CaseChart = ({ store }: { store: LoadedState }) => {
-  const cases = Object.entries(
-    store.data.toObject(
-      row => row.date,
-      row => row.total_cases,
-    ),
+const selectDataToRenderIntoChart = (state: LoadedState) =>
+  Object.entries(
+    state.data
+      .where(row => includes(row.iso_code)(state.ui.pickedCountries))
+      .toObject(
+        row => row.date,
+        row => row.total_cases,
+      ),
   );
+
+export const CaseChart = () => {
+  const cases = useSelector(selectDataToRenderIntoChart);
 
   const options: Highcharts.Options = {
     title: {

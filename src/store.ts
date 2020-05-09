@@ -1,13 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {reducer} from './reducers';
-
 import { createEpicMiddleware } from 'redux-observable';
-
 import { rootEpic } from './epics';
-
 import { makeInitialized } from './actions'
-
 import { IDataFrame } from 'data-forge';
+import { Store as ReduxStore } from 'redux';
+import { Action } from './actions';
 
 export type State = LoadingState | LoadedState | ErrorState;
 
@@ -31,6 +29,8 @@ export interface ErrorState {
 }
 
 export const initialState: State = {type: "loading"};
+
+export type Store = ReduxStore<State, Action>;
 
 const epicMiddleware = createEpicMiddleware();
 export const store = configureStore({
