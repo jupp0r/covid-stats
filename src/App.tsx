@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { makeInitialized } from "./actions";
+import { mapDispatchToProps, makeCountrySelectedAction } from "./actions";
 import "./App.css";
 
 import { State, ErrorState, LoadedState } from "./store";
@@ -11,7 +11,10 @@ import { Error } from "./Error";
 
 import { assertNever } from "./utils";
 
-function App(props: { store: State }) {
+function App(props: {
+  store: State;
+  makeCountriesSelectedAction: (countries: string[]) => void;
+}) {
   return (
     <div className="App">
       {((store: State) => {
@@ -19,7 +22,12 @@ function App(props: { store: State }) {
           case "loading":
             return <Loading />;
           case "loaded":
-            return <Loaded store={props.store as LoadedState} />;
+            return (
+              <Loaded
+                store={props.store as LoadedState}
+                makeCountriesSelectedAction={makeCountrySelectedAction}
+              />
+            );
           case "error":
             return <Error store={props.store as ErrorState} />;
           default:
@@ -30,6 +38,4 @@ function App(props: { store: State }) {
   );
 }
 
-export default connect((state: State): State => state, { makeInitialized })(
-  App,
-);
+export default connect((state: State): State => state, mapDispatchToProps)(App);

@@ -15,9 +15,14 @@ export interface LoadingState {
     type: "loading",
 }
 
+export interface UIState {
+    pickedCountries: string[],
+}
+
 export interface LoadedState {
     type: "loaded",
     data: IDataFrame,
+    ui: UIState,
 }
 
 export interface ErrorState {

@@ -32,9 +32,7 @@ export const parsePopulationCSV = (data: string): Observable<IDataFrame> =>
             }))
         );
 
-export const transformCsvData = (data: IDataFrame): IDataFrame => {
-    return data.where((row: CovidRow) => row.iso_code === "USA");
-};
+export const transformCsvData = (data: IDataFrame): IDataFrame => data;
 
 type Maximums = Map<string, number>;
 

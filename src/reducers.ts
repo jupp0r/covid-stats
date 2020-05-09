@@ -1,7 +1,7 @@
-import { initialState, State } from './store';
+import { initialState, State, LoadedState } from "./store";
 
 import { Action } from "./actions";
-import { transformCsvData } from './data';
+import { transformCsvData } from "./data";
 
 import { assertNever } from "./utils";
 
@@ -13,14 +13,27 @@ const loadingReducer = (state: State, action: Action): State => {
             return {
                 type: "loaded",
                 data: transformCsvData(action.response),
-            }
+                ui: {
+                    pickedCountries: ["USA"],
+                },
+            };
         default:
             return state;
     }
-}
+};
 
-const loadedReducer = (state: State, action: Action): State => state;
-
+const loadedReducer = (state: LoadedState, action: Action): State => {
+    switch (action.type) {
+        case "country-selected":
+            return {
+                ...state,
+                ui:
+                    { ...state.ui, pickedCountries: state.ui.pickedCountries }
+            };
+        default:
+            return state;
+    }
+};
 
 export const reducer = (state: State = initialState, action: Action): State => {
     switch (state.type) {
@@ -33,4 +46,4 @@ export const reducer = (state: State = initialState, action: Action): State => {
         default:
             return assertNever(state);
     }
-}
+};
