@@ -56,7 +56,7 @@ const computeLatestPopulation = (population: IDataFrame): IDataFrame =>
 export const mergeCovidPopulation = (covid: IDataFrame, population: IDataFrame): IDataFrame => {
     const populationLatest = computeLatestPopulation(population);
     console.log(populationLatest.toArray());
-    return covid.joinOuterRight(
+    return covid.join(
         populationLatest,
         (covid: CovidRow) => covid.iso_code,
         (pop: PopulationRow) => pop.iso_code,

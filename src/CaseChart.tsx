@@ -9,14 +9,16 @@ const selectDataToRenderIntoChart = (
   state: LoadedState,
 ): {
   name: string;
-  series: [Date, number][];
+  data: [Date, number][];
+  type: "line";
 }[] =>
   state.ui.pickedCountries.map((pickedCountry: string) => ({
     name: pickedCountry,
-    series: state.data
+    data: state.data
       .where(row => row.iso_code === pickedCountry)
       .toArray()
       .map(row => [row.date, row.total_cases]),
+    type: "line",
   }));
 
 export const CaseChart = () => {
@@ -39,13 +41,7 @@ export const CaseChart = () => {
     yAxis: {
       type: "logarithmic",
     },
-    series: [
-      {
-        type: "line",
-        name: "Cases",
-        data: cases,
-      },
-    ],
+    series: cases,
   };
 
   console.log(cases);
