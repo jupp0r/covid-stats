@@ -71,7 +71,7 @@ export const DeathCurve = () => {
       title: {
         text: "Fraction of dead population",
       },
-      min: 1e-7,
+      min: 1e-6,
       tickInterval: 1,
       labels: {
         step: 1,
@@ -85,7 +85,7 @@ export const DeathCurve = () => {
       title: {
         text: "Fraction of dead population per day (smoothed)",
       },
-      min: 1e-8,
+      min: 1e-7,
       tickInterval: 1,
       labels: {
         step: 1,
