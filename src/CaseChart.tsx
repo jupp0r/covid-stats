@@ -2,6 +2,7 @@ import React from "react";
 
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+
 import { LoadedState } from "./store";
 import { useSelector } from "react-redux";
 
@@ -28,10 +29,16 @@ export const CaseChart = () => {
     title: {
       text: "Cases over time",
     },
+    chart: {
+      height: "50%",
+    },
     xAxis: {
       type: "datetime",
       title: {
         text: "Date",
+      },
+      labels: {
+        step: 1,
       },
     },
     yAxis: {
@@ -40,7 +47,6 @@ export const CaseChart = () => {
     series: cases,
   };
 
-  console.log(cases);
   return (
     <div>
       <HighchartsReact highcharts={Highcharts} options={options} />
