@@ -6,7 +6,8 @@ export type Action =
   | FetchSuccessAction
   | CountryToggleAction
   | CountrySearchChangedAction
-  | ProgressAction;
+  | ProgressAction
+  | UrlUpdatedAction;
 
 export interface InitialAction {
   type: "initialized";
@@ -72,3 +73,10 @@ export const makeProgressAction = (progress: {
 }): ProgressAction => {
   return { ...progress, type: "progress" };
 };
+
+export interface UrlUpdatedAction {
+  type: "url-updated",
+  url: string
+}
+
+export const makeUrlUpdated = (url: string): UrlUpdatedAction => ({type: "url-updated", url})

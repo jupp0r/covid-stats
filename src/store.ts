@@ -6,36 +6,42 @@ import { makeInitialized } from "./actions";
 import { IDataFrame } from "data-forge";
 import { Store as ReduxStore } from "redux";
 import { Action } from "./actions";
+import { setupRouting } from "./router";
 
-export type State = LoadingState | LoadedState | ErrorState;
+export type State = (LoadingState | LoadedState | ErrorState);
+interface RoutingState {
+  routing: {
+    url: string,
+  }
+}
 
 interface Progress {
   done: number;
   total: number;
 }
-export interface LoadingState {
+export type LoadingState = {
   type: "loading";
   progress: {
     covid: Progress;
     population: Progress;
   };
-}
+} & RoutingState;
 
-export interface UIState {
+export type UIState = {
   pickedCountries: string[];
   searchText: string;
 }
 
-export interface LoadedState {
+export type LoadedState = {
   type: "loaded";
   data: IDataFrame;
   ui: UIState;
-}
+} & RoutingState
 
-export interface ErrorState {
+export type ErrorState = {
   type: "error";
   message: string;
-}
+} & RoutingState;
 
 const covidSizeEstimate = 2542856;
 const populationSizeEstimate = 487991;
@@ -46,6 +52,9 @@ export const initialState: State = {
     covid: { done: 0, total: covidSizeEstimate },
     population: { done: 0, total: populationSizeEstimate },
   },
+  routing: {
+    url: window.location.toString(),
+  }
 };
 
 export type Store = ReduxStore<State, Action>;
@@ -57,4 +66,5 @@ export const store = configureStore({
 });
 epicMiddleware.run(rootEpic);
 
+setupRouting(store);
 store.dispatch(makeInitialized());

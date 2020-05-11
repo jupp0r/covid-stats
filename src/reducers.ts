@@ -7,18 +7,25 @@ import { assertNever } from "./utils";
 
 import { includes, filter } from "lodash/fp";
 
+import { getPickedCountriesFromUrl, updateCountriesInPathName } from "./router";
+
 const errorReducer = (state: State, action: Action): State => state;
 
 const loadingReducer = (state: LoadingState, action: Action): State => {
   switch (action.type) {
     case "fetch-success":
+      const pickedCountries = getPickedCountriesFromUrl(state.routing.url);
       return {
+        ...state,
         type: "loaded",
         data: transformCsvData(action.response),
         ui: {
-          pickedCountries: ["USA"],
+          pickedCountries,
           searchText: "",
         },
+        routing: {
+          url: updateCountriesInPathName(state.routing.url, pickedCountries)
+        }
       };
     case "progress":
       return {
@@ -51,14 +58,19 @@ const loadedReducer = (state: LoadedState, action: Action): State => {
         return [country, ...countries];
       };
 
+      const newCountries = toggleCountryToPicked(
+        action.countryCode,
+        state.ui.pickedCountries,
+      );
+
       return {
         ...state,
         ui: {
           ...state.ui,
-          pickedCountries: toggleCountryToPicked(
-            action.countryCode,
-            state.ui.pickedCountries,
-          ),
+          pickedCountries: newCountries,
+        },
+        routing: {
+          url: updateCountriesInPathName(state.routing.url, newCountries),
         },
       };
     case "country-search-changed":
