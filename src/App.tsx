@@ -16,6 +16,8 @@ import { assertNever } from "./utils";
 
 GridTheme(Highcharts);
 
+const centered: React.CSSProperties = { textAlign: "center" };
+
 export const App = () => {
   const state: State = useSelector<State, State>(_ => _);
   return (
@@ -41,6 +43,13 @@ export const App = () => {
               return assertNever(state);
           }
         })(state)}
+      </div>
+      <div style={centered}>
+        data from{" "}
+        <a href="https://covid.ourworldindata.org">Our World In Data</a> and{" "}
+        <a href="https://github.com/datasets/population">
+          datahub.io via the World Bank
+        </a>
       </div>
     </>
   );
