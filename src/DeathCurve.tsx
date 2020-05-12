@@ -97,5 +97,9 @@ export const DeathCurve = () => {
     series: deaths,
   };
 
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  return (
+    <div id="deathcurve">
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+  );
 };

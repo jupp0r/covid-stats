@@ -57,6 +57,8 @@ export const initialState: State = {
   }
 };
 
+export const defaultCountries = ["USA", "DEU", "SWE", "ITA", "NGA"];
+
 export type Store = ReduxStore<State, Action>;
 
 const epicMiddleware = createEpicMiddleware();

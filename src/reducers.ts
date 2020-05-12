@@ -81,6 +81,10 @@ const loadedReducer = (state: LoadedState, action: Action): State => {
 };
 
 export const reducer = (state: State = initialState, action: Action): State => {
+  if (action.type === "url-updated") {
+    return { ...state, routing: { ...state.routing, url: action.url } };
+  }
+  
   switch (state.type) {
     case "error":
       return errorReducer(state, action);

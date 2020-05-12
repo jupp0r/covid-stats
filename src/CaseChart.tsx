@@ -18,7 +18,10 @@ const selectDataToRenderIntoChart = (
     data: state.data
       .where(row => row.iso_code === pickedCountry)
       .toArray()
-      .map(row => [row.date.getTime(), row.total_cases]),
+      .map(row => [
+        row.date.getTime(),
+        (row.total_cases * 1000000) / row.population,
+      ]),
     type: "line",
   }));
 
@@ -43,12 +46,15 @@ export const CaseChart = () => {
     },
     yAxis: {
       type: "logarithmic",
+      title: {
+        text: "Cases per 1M population",
+      },
     },
     series: cases,
   };
 
   return (
-    <div>
+    <div id="cases">
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );

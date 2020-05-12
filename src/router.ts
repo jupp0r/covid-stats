@@ -4,6 +4,8 @@ import { State } from "./store";
 import { Store } from "redux";
 
 import { makeUrlUpdated } from "./actions";
+import { defaultCountries } from "./store";
+
 
 export const updateCountriesInPathName = (
   urlString: string,
@@ -21,15 +23,14 @@ export const getPickedCountriesFromUrl = (urlString: string): string[] => {
   const params = new URLSearchParams(url.search);
   const countries = params.get("countries[]");
   if (!countries) {
-    console.log("no countries field found", url, params);
-    return ["USA"];
+    return defaultCountries;
   }
 
   const parsedCountries: string[] = JSON.parse(countries);
 
   if (!Array.isArray(parsedCountries)) {
     console.error("invalid url params");
-    return ["USA"];
+    return defaultCountries;
   }
 
   return parsedCountries;
