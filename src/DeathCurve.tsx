@@ -65,6 +65,7 @@ export const DeathCurve = () => {
     },
     chart: {
       height: "50%",
+      zoomType: "xy",
     },
     xAxis: {
       type: "logarithmic",

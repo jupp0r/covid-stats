@@ -54,10 +54,13 @@ export const CountryPicker = () => {
 
   const searchText = useSelector((state: LoadedState) => state.ui.searchText);
 
+  const ulStyle = { listStyleType: "none" };
+
   return (
     <div>
       <label>
-        Country Picker
+        Select Countries
+        <br />
         <input
           type="text"
           name="search"
@@ -66,7 +69,9 @@ export const CountryPicker = () => {
           }
           value={searchText}
         />
-        <ul id="countries">{allCountries}</ul>
+        <ul id="countries" style={ulStyle}>
+          {allCountries}
+        </ul>
       </label>
     </div>
   );

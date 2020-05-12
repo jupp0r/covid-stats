@@ -6,6 +6,8 @@ import HighchartsReact from "highcharts-react-official";
 import { LoadedState } from "./store";
 import { useSelector } from "react-redux";
 
+import Theme from "highcharts/themes/dark-unica";
+
 const selectDataToRenderIntoChart = (
   state: LoadedState,
 ): {
@@ -34,6 +36,7 @@ export const CaseChart = () => {
     },
     chart: {
       height: "50%",
+      zoomType: "x",
     },
     xAxis: {
       type: "datetime",

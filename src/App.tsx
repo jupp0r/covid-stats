@@ -3,6 +3,9 @@ import { useSelector } from "react-redux";
 import "./App.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 
+import Highcharts from "highcharts";
+import GridTheme from "highcharts/themes/grid";
+
 import { State } from "./store";
 
 import { Loading } from "./Loading";
@@ -10,6 +13,8 @@ import { Loaded } from "./Loaded";
 import { Error } from "./Error";
 
 import { assertNever } from "./utils";
+
+GridTheme(Highcharts);
 
 export const App = () => {
   const state: State = useSelector<State, State>(_ => _);
