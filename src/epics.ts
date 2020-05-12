@@ -66,7 +66,7 @@ export const startLoadingEpic = (
     filter((action: Action) => action.type === "initialized"),
     flatMap(() => {
       const { progress, result } = fromXhr(
-        "https://covid.ourworldindata.org/data/owid-covid-data.csv",
+        "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv",
       );
       const progress$ = progress.pipe(
         map((update: Progress) =>

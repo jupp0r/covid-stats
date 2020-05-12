@@ -16,6 +16,7 @@ const smooth = (amount: number, series: number[][]): number[][] => {
     let sum = 0;
     for (let j = amount * -1; j <= amount; j++) {
       if (series[i + j] === undefined) {
+        // ignore edges
         continue;
       }
 
