@@ -36,17 +36,13 @@ const coutrySelector = (state: LoadedState) =>
 export const CountryPicker = () => {
   const dispatch = useDispatch();
 
-  const boldIfSelected = (selected: boolean): CSSProperties => ({
-    fontWeight: selected ? "bold" : "normal",
-  });
-
   const allCountries = useSelector(coutrySelector).map(
     ({ iso_code, location, active }) => (
       <li
         key={iso_code}
-        style={boldIfSelected(active)}
         onClick={_ => dispatch(makeCountryToggleAction(iso_code))}
       >
+        <input type="checkbox" checked={active} />
         {location}
       </li>
     ),
@@ -54,16 +50,17 @@ export const CountryPicker = () => {
 
   const searchText = useSelector((state: LoadedState) => state.ui.searchText);
 
-  const ulStyle = { listStyleType: "none" };
+  const ulStyle = { listStyleType: "none", align: "left" };
 
   return (
     <div>
       <label>
-        Select Countries
+        <h2>Select Countries</h2>
         <br />
         <input
           type="text"
           name="search"
+          placeholder="Search Countries"
           onChange={e =>
             dispatch(makeCoutrySearchChangedAction(e.target.value))
           }

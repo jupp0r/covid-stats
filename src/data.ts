@@ -61,7 +61,6 @@ export const mergeCovidPopulation = (
   population: IDataFrame,
 ): IDataFrame => {
   const populationLatest = computeLatestPopulation(population);
-  console.log(covid.toArray());
   return covid.join(
     populationLatest,
     (covid: CovidRow) => covid.iso_code,
@@ -71,4 +70,27 @@ export const mergeCovidPopulation = (
       population: pop ? pop.population : 0,
     }),
   );
+};
+
+export const smooth = (amount: number, series: number[][]): number[][] => {
+  amount = Math.ceil(Math.abs(amount));
+  let results: Array<Array<number>> = [];
+  for (let i = 0; i < series.length; i++) {
+    let [x] = series[i];
+
+    let valuesInAverage = 0;
+    let sum = 0;
+    for (let j = amount * -1; j <= amount; j++) {
+      if (series[i + j] === undefined) {
+        // ignore edges
+        continue;
+      }
+
+      sum = sum + series[i + j][1];
+      valuesInAverage = valuesInAverage + 1;
+    }
+
+    results.push([x, sum / valuesInAverage]);
+  }
+  return results;
 };

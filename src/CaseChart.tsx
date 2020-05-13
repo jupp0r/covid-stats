@@ -52,6 +52,9 @@ export const CaseChart = () => {
       },
     },
     series: cases,
+    credits: {
+      enabled: false,
+    },
   };
 
   return (

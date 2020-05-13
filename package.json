@@ -25,6 +25,8 @@
     "redux-observable": "^1.2.0",
     "reselect": "^4.0.0",
     "rxjs": "^6.5.5",
+    "styled-components": "^5.1.0",
+    "styled-css-grid": "^1.2.1",
     "typescript": "~3.7.2"
   },
   "scripts": {

@@ -121,7 +121,6 @@ export const startLoadingEpic = (
   ).pipe(
     map(
       ([covid, population]): Action => {
-        console.log("happened");
         if (covid.type === "success" && population.type === "success") {
           return {
             type: "fetch-success",

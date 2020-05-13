@@ -6,29 +6,7 @@ import HighchartsReact from "highcharts-react-official";
 import { useSelector } from "react-redux";
 import { LoadedState } from "./store";
 
-const smooth = (amount: number, series: number[][]): number[][] => {
-  amount = Math.ceil(Math.abs(amount));
-  let results: Array<Array<number>> = [];
-  for (let i = 0; i < series.length; i++) {
-    let [x] = series[i];
-
-    let valuesInAverage = 0;
-    let sum = 0;
-    for (let j = amount * -1; j <= amount; j++) {
-      if (series[i + j] === undefined) {
-        // ignore edges
-        continue;
-      }
-
-      sum = sum + series[i + j][1];
-      valuesInAverage = valuesInAverage + 1;
-    }
-
-    results.push([x, sum / valuesInAverage]);
-  }
-  console.log("smooth results: ", results);
-  return results;
-};
+import { smooth } from "./data";
 
 const deathCurveSelector = (state: LoadedState): SeriesOptionsType[] =>
   state.ui.pickedCountries.map(country => {
@@ -97,10 +75,19 @@ export const DeathCurve = () => {
       },
     },
     series: deaths,
+    credits: {
+      enabled: false,
+    },
   };
 
   return (
     <div id="deathcurve">
+      <h2>
+        Robins Death Curve
+        <span role="img" aria-label="tm">
+          ™️
+        </span>
+      </h2>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
