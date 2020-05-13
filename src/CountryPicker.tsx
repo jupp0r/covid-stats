@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { LoadedState } from "./store";
