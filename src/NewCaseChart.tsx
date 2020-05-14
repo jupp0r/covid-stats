@@ -29,6 +29,7 @@ export const NewCaseChart = () => {
       name: "7 day average",
       data: smooth(3, countryData.data),
       type: "line",
+      enableMouseTracking: false,
     };
 
     const options: Highcharts.Options = {

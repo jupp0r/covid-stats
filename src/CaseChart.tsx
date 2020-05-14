@@ -59,6 +59,7 @@ export const CaseChart = () => {
 
   return (
     <div id="cases">
+      <h2>Cases over Time</h2>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
