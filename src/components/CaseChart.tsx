@@ -36,9 +36,6 @@ export const CaseChart = () => {
   );
 
   const options: Highcharts.Options = {
-    title: {
-      text: "Cases over time",
-    },
     chart: {
       height: "50%",
       zoomType: "x",

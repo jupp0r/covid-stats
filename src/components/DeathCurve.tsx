@@ -50,9 +50,6 @@ export const DeathCurve = () => {
     },
     xAxis: {
       type: "logarithmic",
-      title: {
-        text: "Fraction of dead population",
-      },
       min: 1e-6,
       tickInterval: 1,
       labels: {
