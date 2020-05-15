@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { LoadedState } from "../store";
@@ -11,6 +11,8 @@ import {
   makeCoutrySearchChangedAction,
 } from "../actions";
 import { IDataFrame } from "data-forge";
+
+import { List, ListItem, Checkbox, TextField } from "@material-ui/core";
 
 const dataSelector = (state: LoadedState) => state.data;
 const pickedCountriesSelector = (state: LoadedState) =>
@@ -49,26 +51,37 @@ export const CountryPicker = () => {
 
   const allCountries = useSelector(coutrySelector).map(
     ({ iso_code, location, active }) => (
-      <li
+      <ListItem
+        button
         key={iso_code}
         onClick={_ => dispatch(makeCountryToggleAction(iso_code))}
       >
-        <input type="checkbox" checked={active} />
+        <Checkbox
+          edge="start"
+          checked={active}
+          tabIndex={-1}
+          disableRipple
+          inputProps={{ "aria-labelledby": iso_code }}
+        />
         {location}
-      </li>
+      </ListItem>
     ),
   );
 
   const searchText = useSelector((state: LoadedState) => state.ui.searchText);
 
-  const ulStyle = { listStyleType: "none", align: "left" };
+  const flexContainer: CSSProperties = {
+    display: "flex",
+    flexDirection: "row",
+    padding: 0,
+  };
 
   return (
     <div>
       <label>
         <h2>Select Countries</h2>
         <br />
-        <input
+        <TextField
           type="text"
           name="search"
           placeholder="Search Countries"
@@ -77,9 +90,9 @@ export const CountryPicker = () => {
           }
           value={searchText}
         />
-        <ul id="countries" style={ulStyle}>
+        <List id="countries" style={flexContainer}>
           {allCountries}
-        </ul>
+        </List>
       </label>
     </div>
   );

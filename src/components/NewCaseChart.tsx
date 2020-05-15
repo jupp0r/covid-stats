@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Cell } from "styled-css-grid";
+import { Grid } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { LoadedState } from "../store";
 import Highcharts, { SeriesOptionsType } from "highcharts";
@@ -61,16 +61,18 @@ export const NewCaseChart = () => {
     };
 
     return (
-      <Cell center middle>
+      <Grid item>
         <HighchartsReact highcharts={Highcharts} options={options} />
-      </Cell>
+      </Grid>
     );
   });
 
   return (
     <div>
       <h2>New Cases</h2>
-      <Grid columns="repeat(auto-fit,minmax(300px,1fr))">{countryCharts}</Grid>
+      <Grid container justify="center" spacing={5}>
+        {countryCharts}
+      </Grid>
     </div>
   );
 };
