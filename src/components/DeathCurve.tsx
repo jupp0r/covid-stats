@@ -42,7 +42,7 @@ export const DeathCurve = () => {
 
   const options: Highcharts.Options = {
     title: {
-      text: "Death Curve",
+      text: "",
     },
     chart: {
       height: "50%",
@@ -50,6 +50,9 @@ export const DeathCurve = () => {
     },
     xAxis: {
       type: "logarithmic",
+      title: {
+        text: "Fraction of dead population",
+      },
       min: 1e-6,
       tickInterval: 1,
       labels: {

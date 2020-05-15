@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import { createMuiTheme, ThemeProvider, CssBaseline } from "@material-ui/core";
 
+import "typeface-roboto";
+
 const rootElement = document.getElementById("root");
 
 const darkTheme = createMuiTheme({

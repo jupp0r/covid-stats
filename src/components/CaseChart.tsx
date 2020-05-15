@@ -40,6 +40,9 @@ export const CaseChart = () => {
       height: "50%",
       zoomType: "x",
     },
+    title: {
+      text: "",
+    },
     xAxis: {
       type: "datetime",
       title: {
