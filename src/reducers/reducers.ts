@@ -22,6 +22,9 @@ const loadingReducer = (state: LoadingState, action: Action): State => {
         ui: {
           pickedCountries,
           searchText: "",
+          caseChart: {
+            logSetting: "logarithmic",
+          },
         },
         routing: {
           url: updateCountriesInPathName(state.routing.url, pickedCountries)
@@ -75,6 +78,8 @@ const loadedReducer = (state: LoadedState, action: Action): State => {
       };
     case "country-search-changed":
       return { ...state, ui: { ...state.ui, searchText: action.search } };
+    case "case-chart-log-setting-changed":
+      return {...state, ui: { ...state.ui, caseChart: {...state.ui.caseChart, logSetting: action.newSetting}}}
     default:
       return state;
   }

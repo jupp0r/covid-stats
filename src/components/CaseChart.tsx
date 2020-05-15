@@ -4,7 +4,11 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import { LoadedState } from "../store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { makeCaseChartLogSettingChangedAction } from "../actions";
+
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 const selectDataToRenderIntoChart = (
   state: LoadedState,
@@ -27,6 +31,9 @@ const selectDataToRenderIntoChart = (
 
 export const CaseChart = () => {
   const cases = useSelector(selectDataToRenderIntoChart);
+  const logAxisSetting = useSelector(
+    (state: LoadedState) => state.ui.caseChart.logSetting,
+  );
 
   const options: Highcharts.Options = {
     title: {
@@ -46,7 +53,7 @@ export const CaseChart = () => {
       },
     },
     yAxis: {
-      type: "logarithmic",
+      type: logAxisSetting,
       title: {
         text: "Cases per 1M population",
       },
@@ -57,9 +64,35 @@ export const CaseChart = () => {
     },
   };
 
+  const dispatch = useDispatch();
+  const handleAxisLogarithmicToggle = (_: any, newSetting: string | null) => {
+    if (!newSetting) {
+      return;
+    }
+
+    if (!(newSetting === "linear" || newSetting === "logarithmic")) {
+      return;
+    }
+
+    dispatch(makeCaseChartLogSettingChangedAction(newSetting));
+  };
+
   return (
     <div id="cases">
       <h2>Cases over Time</h2>
+      <ToggleButtonGroup
+        value={logAxisSetting}
+        onChange={handleAxisLogarithmicToggle}
+        exclusive
+        aria-label="log axis setting"
+      >
+        <ToggleButton value="logarithmic" aria-label="logarithmic">
+          log
+        </ToggleButton>
+        <ToggleButton value="linear" aria-label="linear">
+          linear
+        </ToggleButton>
+      </ToggleButtonGroup>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );

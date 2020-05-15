@@ -7,7 +7,8 @@ export type Action =
   | CountryToggleAction
   | CountrySearchChangedAction
   | ProgressAction
-  | UrlUpdatedAction;
+  | UrlUpdatedAction
+  | CaseChartLogSettingChangedAction;
 
 export interface InitialAction {
   type: "initialized";
@@ -75,8 +76,23 @@ export const makeProgressAction = (progress: {
 };
 
 export interface UrlUpdatedAction {
-  type: "url-updated",
-  url: string
+  type: "url-updated";
+  url: string;
 }
 
-export const makeUrlUpdated = (url: string): UrlUpdatedAction => ({type: "url-updated", url})
+export const makeUrlUpdated = (url: string): UrlUpdatedAction => ({
+  type: "url-updated",
+  url,
+});
+
+export interface CaseChartLogSettingChangedAction {
+  type: "case-chart-log-setting-changed";
+  newSetting: "linear" | "logarithmic";
+}
+
+export const makeCaseChartLogSettingChangedAction = (
+  newSetting: "linear" | "logarithmic",
+): CaseChartLogSettingChangedAction => ({
+  type: "case-chart-log-setting-changed",
+  newSetting,
+});

@@ -42,9 +42,7 @@ export const NewCaseChart = () => {
       },
       xAxis: {
         type: "datetime",
-        title: {
-          text: "Date",
-        },
+        tickInterval: 7 * 24 * 3600 * 1000,
       },
       yAxis: {
         title: {
@@ -61,7 +59,7 @@ export const NewCaseChart = () => {
     };
 
     return (
-      <Grid item>
+      <Grid item key={country}>
         <HighchartsReact highcharts={Highcharts} options={options} />
       </Grid>
     );
@@ -70,7 +68,7 @@ export const NewCaseChart = () => {
   return (
     <div>
       <h2>New Cases</h2>
-      <Grid container justify="center" spacing={5}>
+      <Grid container justify="center" spacing={5} style={{ width: "100%" }}>
         {countryCharts}
       </Grid>
     </div>

@@ -30,6 +30,9 @@ export type LoadingState = {
 export type UIState = {
   pickedCountries: string[];
   searchText: string;
+  caseChart: {
+    logSetting: "linear" | "logarithmic";
+  };
 }
 
 export type LoadedState = {
