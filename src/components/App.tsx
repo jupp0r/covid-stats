@@ -4,7 +4,6 @@ import "./App.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 
 import Highcharts from "highcharts";
-import GridTheme from "highcharts/themes/grid";
 
 import { State } from "../store";
 
@@ -13,11 +12,11 @@ import { Loaded } from "./Loaded";
 import { Error } from "./Error";
 
 import { assertNever } from "../utils";
-
-GridTheme(Highcharts);
+import "./highchartsTheme";
 
 export const App = () => {
-  const state: State = useSelector<State, State>(_ => _);
+  const type = useSelector<State, State["type"]>(state => state.type);
+
   return (
     <>
       <a
@@ -29,8 +28,8 @@ export const App = () => {
         Fork me on GitHub
       </a>
       <div className="App">
-        {((state: State) => {
-          switch (state.type) {
+        {((type: State["type"]) => {
+          switch (type) {
             case "loading":
               return <Loading />;
             case "loaded":
@@ -38,9 +37,9 @@ export const App = () => {
             case "error":
               return <Error />;
             default:
-              return assertNever(state);
+              return assertNever(type);
           }
-        })(state)}
+        })(type)}
       </div>
     </>
   );

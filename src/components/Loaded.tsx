@@ -10,6 +10,7 @@ const centered: React.CSSProperties = { textAlign: "center" };
 export const Loaded = () => {
   return (
     <div>
+      <h1>Covid Stats</h1>
       <CountryPicker />
       <hr />
       <NewCaseChart />

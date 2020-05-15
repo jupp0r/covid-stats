@@ -79,7 +79,6 @@ export const CountryPicker = () => {
   return (
     <div>
       <label>
-        <h2>Select Countries</h2>
         <br />
         <TextField
           type="text"

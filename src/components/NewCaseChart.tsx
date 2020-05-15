@@ -34,7 +34,7 @@ export const NewCaseChart = () => {
 
     const options: Highcharts.Options = {
       chart: {
-        height: "300",
+        height: "200",
         width: "300",
       },
       title: {
