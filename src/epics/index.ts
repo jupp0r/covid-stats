@@ -2,7 +2,7 @@ import { Observable, zip, merge } from "rxjs";
 
 import { filter, flatMap, map } from "rxjs/operators";
 
-import { Action, makeProgressAction, ProgressAction } from "./actions";
+import { Action, makeProgressAction, ProgressAction } from "../actions";
 
 import { combineEpics } from "redux-observable";
 
@@ -10,7 +10,7 @@ import {
   parseCovidCSV,
   parsePopulationCSV,
   mergeCovidPopulation,
-} from "./data";
+} from "../store/data";
 import { IDataFrame } from "data-forge";
 
 type DataResult =

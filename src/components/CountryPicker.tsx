@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { LoadedState } from "./store";
+import { LoadedState } from "../store";
 
 import { createSelector } from "reselect";
 
@@ -9,7 +9,7 @@ import { includes } from "lodash/fp";
 import {
   makeCountryToggleAction,
   makeCoutrySearchChangedAction,
-} from "./actions";
+} from "../actions";
 import { IDataFrame } from "data-forge";
 
 const dataSelector = (state: LoadedState) => state.data;

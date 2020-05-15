@@ -1,10 +1,10 @@
-import { Action } from "./actions";
-import { State } from "./store";
+import { Action } from "../actions";
+import { State } from "../store";
 
 import { Store } from "redux";
 
-import { makeUrlUpdated } from "./actions";
-import { defaultCountries } from "./store";
+import { makeUrlUpdated } from "../actions";
+import { defaultCountries } from "../store";
 
 
 export const updateCountriesInPathName = (

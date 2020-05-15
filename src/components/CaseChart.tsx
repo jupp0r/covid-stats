@@ -3,7 +3,7 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-import { LoadedState } from "./store";
+import { LoadedState } from "../store";
 import { useSelector } from "react-redux";
 
 const selectDataToRenderIntoChart = (

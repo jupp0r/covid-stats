@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { reducer } from "./reducers";
+import { reducer } from "../reducers/reducers";
 import { createEpicMiddleware } from "redux-observable";
-import { rootEpic } from "./epics";
-import { makeInitialized } from "./actions";
+import { rootEpic } from "../epics";
+import { makeInitialized } from "../actions";
 import { IDataFrame } from "data-forge";
 import { Store as ReduxStore } from "redux";
-import { Action } from "./actions";
-import { setupRouting } from "./router";
+import { Action } from "../actions";
+import { setupRouting } from "../reducers/router";
 
 export type State = (LoadingState | LoadedState | ErrorState);
 interface RoutingState {

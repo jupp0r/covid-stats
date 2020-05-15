@@ -6,13 +6,13 @@ import "github-fork-ribbon-css/gh-fork-ribbon.css";
 import Highcharts from "highcharts";
 import GridTheme from "highcharts/themes/grid";
 
-import { State } from "./store";
+import { State } from "../store";
 
 import { Loading } from "./Loading";
 import { Loaded } from "./Loaded";
 import { Error } from "./Error";
 
-import { assertNever } from "./utils";
+import { assertNever } from "../utils";
 
 GridTheme(Highcharts);
 

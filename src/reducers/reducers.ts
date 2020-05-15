@@ -1,9 +1,9 @@
-import { initialState, State, LoadedState, LoadingState } from "./store";
+import { initialState, State, LoadedState, LoadingState } from "../store";
 
-import { Action } from "./actions";
-import { transformCsvData } from "./data";
+import { Action } from "../actions";
+import { transformCsvData } from "../store/data";
 
-import { assertNever } from "./utils";
+import { assertNever } from "../utils";
 
 import { includes, filter } from "lodash/fp";
 

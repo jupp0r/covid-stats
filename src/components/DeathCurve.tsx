@@ -4,9 +4,9 @@ import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import { useSelector } from "react-redux";
-import { LoadedState } from "./store";
+import { LoadedState } from "../store";
 
-import { smooth } from "./data";
+import { smooth } from "../store/data";
 
 const deathCurveSelector = (state: LoadedState): SeriesOptionsType[] =>
   state.ui.pickedCountries.map(country => {

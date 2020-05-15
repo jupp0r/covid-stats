@@ -1,10 +1,10 @@
 import React from "react";
 import { Grid, Cell } from "styled-css-grid";
 import { useSelector } from "react-redux";
-import { LoadedState } from "./store";
+import { LoadedState } from "../store";
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { smooth } from "./data";
+import { smooth } from "../store/data";
 
 export const NewCaseChart = () => {
   const selectedCountries = useSelector(

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { LoadingState } from "./store";
+import { LoadingState } from "../store";
 
 export const Loading = () => {
   const progress = useSelector((state: LoadingState) => state.progress);

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ErrorState } from "./store";
+import { ErrorState } from "../store";
 import { useSelector } from "react-redux";
 
 export const Error = () => {
