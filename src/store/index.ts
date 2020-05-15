@@ -46,7 +46,7 @@ export type ErrorState = {
   message: string;
 } & RoutingState;
 
-const covidSizeEstimate = 2542856;
+const covidSizeEstimate = 2459742;
 const populationSizeEstimate = 487991;
 
 export const initialState: State = {

@@ -2,17 +2,31 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { LoadingState } from "../store";
 
+import { LinearProgress } from "@material-ui/core";
+import { SpacedPaper } from "./SpacedPaper";
+
 export const Loading = () => {
   const progress = useSelector((state: LoadingState) => state.progress);
+
+  const normalize = ({ done, total }: { done: number; total: number }) =>
+    (done / total) * 100;
+
   return (
-    <div>
+    <SpacedPaper>
       <div>
-        loading covid: {progress.covid.done} / {progress.covid.total}
+        <h2>loading covid data</h2>
+        <LinearProgress
+          variant="determinate"
+          value={normalize(progress.covid)}
+        />
       </div>
       <div>
-        loading population: {progress.population.done} /{" "}
-        {progress.population.total}
+        <h2>loading world population data</h2>
+        <LinearProgress
+          variant="determinate"
+          value={normalize(progress.population)}
+        />
       </div>
-    </div>
+    </SpacedPaper>
   );
 };

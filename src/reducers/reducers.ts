@@ -37,8 +37,8 @@ const loadingReducer = (state: LoadingState, action: Action): State => {
           ...state.progress,
           [action.target]: {
             done: action.done,
-            total: state.progress[action.target].total,
-            ...(action.total !== 0 && { total: action.total }),
+            total: Math.max(state.progress[action.target].total, action.done),
+            ...(action.total !== 0 && { total: Math.max(action.total, action.done) }),
           },
         },
       };
