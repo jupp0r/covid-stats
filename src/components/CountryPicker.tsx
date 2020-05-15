@@ -49,12 +49,17 @@ const coutrySelector = createSelector(
 export const CountryPicker = () => {
   const dispatch = useDispatch();
 
+  const autoWidthItem: CSSProperties = {
+    width: "180px",
+  };
+
   const allCountries = useSelector(coutrySelector).map(
     ({ iso_code, location, active }) => (
       <ListItem
         button
         key={iso_code}
         onClick={_ => dispatch(makeCountryToggleAction(iso_code))}
+        style={autoWidthItem}
       >
         <Checkbox
           edge="start"
@@ -72,8 +77,10 @@ export const CountryPicker = () => {
 
   const flexContainer: CSSProperties = {
     display: "flex",
-    flexDirection: "row",
     padding: 0,
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   return (
