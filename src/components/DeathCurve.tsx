@@ -8,6 +8,8 @@ import { LoadedState } from "../store";
 
 import { smooth } from "../store/data";
 
+import { SpacedPaper } from "./SpacedPaper";
+
 const deathCurveSelector = (state: LoadedState): SeriesOptionsType[] =>
   state.ui.pickedCountries.map(country => {
     const filteredByCountry = state.data.where(row => row.iso_code === country);
@@ -81,7 +83,7 @@ export const DeathCurve = () => {
   };
 
   return (
-    <div id="deathcurve">
+    <SpacedPaper id="deathcurve" elevation={3}>
       <h2>
         Robins Death Curve
         <span role="img" aria-label="tm">
@@ -89,6 +91,6 @@ export const DeathCurve = () => {
         </span>
       </h2>
       <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    </SpacedPaper>
   );
 };

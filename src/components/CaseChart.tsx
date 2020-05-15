@@ -7,8 +7,8 @@ import { LoadedState } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { makeCaseChartLogSettingChangedAction } from "../actions";
 
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import { SpacedPaper } from "./SpacedPaper";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 const selectDataToRenderIntoChart = (
   state: LoadedState,
@@ -78,7 +78,7 @@ export const CaseChart = () => {
   };
 
   return (
-    <div id="cases">
+    <SpacedPaper id="cases" elevation={3}>
       <h2>Cases over Time</h2>
       <ToggleButtonGroup
         value={logAxisSetting}
@@ -94,6 +94,6 @@ export const CaseChart = () => {
         </ToggleButton>
       </ToggleButtonGroup>
       <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    </SpacedPaper>
   );
 };

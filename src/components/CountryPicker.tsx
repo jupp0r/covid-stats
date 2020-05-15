@@ -14,6 +14,8 @@ import { IDataFrame } from "data-forge";
 
 import { List, ListItem, Checkbox, TextField } from "@material-ui/core";
 
+import { SpacedPaper } from "./SpacedPaper";
+
 const dataSelector = (state: LoadedState) => state.data;
 const pickedCountriesSelector = (state: LoadedState) =>
   state.ui.pickedCountries;
@@ -84,7 +86,7 @@ export const CountryPicker = () => {
   };
 
   return (
-    <div>
+    <SpacedPaper elevation={3}>
       <label>
         <br />
         <TextField
@@ -100,6 +102,6 @@ export const CountryPicker = () => {
           {allCountries}
         </List>
       </label>
-    </div>
+    </SpacedPaper>
   );
 };

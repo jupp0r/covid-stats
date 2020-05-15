@@ -12,6 +12,8 @@ import { Error } from "./Error";
 import { assertNever } from "../utils";
 import "./highchartsTheme";
 
+import Box from "@material-ui/core/Box";
+
 export const App = () => {
   const type = useSelector<State, State["type"]>(state => state.type);
 
@@ -25,7 +27,7 @@ export const App = () => {
       >
         Fork me on GitHub
       </a>
-      <div className="App">
+      <Box px={3} py={3} my={3} textAlign="center">
         {((type: State["type"]) => {
           switch (type) {
             case "loading":
@@ -38,7 +40,7 @@ export const App = () => {
               return assertNever(type);
           }
         })(type)}
-      </div>
+      </Box>
     </>
   );
 };

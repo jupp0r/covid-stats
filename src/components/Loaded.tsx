@@ -12,11 +12,8 @@ export const Loaded = () => {
     <div>
       <h1>Covid Stats</h1>
       <CountryPicker />
-      <hr />
       <NewCaseChart />
-      <hr />
       <CaseChart />
-      <hr />
       <DeathCurve />
       <div style={centered}>
         data from{" "}

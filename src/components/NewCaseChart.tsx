@@ -5,6 +5,7 @@ import { LoadedState } from "../store";
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { smooth } from "../store/data";
+import { SpacedPaper } from "./SpacedPaper";
 
 export const NewCaseChart = () => {
   const selectedCountries = useSelector(
@@ -66,11 +67,11 @@ export const NewCaseChart = () => {
   });
 
   return (
-    <div>
+    <SpacedPaper elevation={3} id="new-cases">
       <h2>New Cases</h2>
-      <Grid container justify="center" spacing={5} style={{ width: "100%" }}>
+      <Grid container justify="center" spacing={5}>
         {countryCharts}
       </Grid>
-    </div>
+    </SpacedPaper>
   );
 };
