@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import "./App.css";
 import "github-fork-ribbon-css/gh-fork-ribbon.css";
 
-import Highcharts from "highcharts";
-
 import { State } from "../store";
 
 import { Loading } from "./Loading";
