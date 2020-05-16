@@ -2,6 +2,7 @@ import React from "react";
 
 import { CaseChart } from "./CaseChart";
 import { CountryPicker } from "./CountryPicker";
+import { DataTable } from "./DataTable";
 import { DeathCurve } from "./DeathCurve";
 import { NewCaseChart } from "./NewCaseChart";
 
@@ -11,6 +12,7 @@ export const Loaded = () => {
   return (
     <div>
       <h1>Covid Stats</h1>
+      <DataTable />
       <CountryPicker />
       <NewCaseChart />
       <CaseChart />

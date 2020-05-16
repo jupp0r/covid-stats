@@ -33,6 +33,9 @@ export type UIState = {
   caseChart: {
     logSetting: "linear" | "logarithmic";
   };
+  dataTable: {
+    dateToDisplay: "today" | "yesterday";
+  };
 }
 
 export type LoadedState = {

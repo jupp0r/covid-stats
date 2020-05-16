@@ -19,6 +19,8 @@ export const parseCovidCSV = (data: string): Observable<IDataFrame> =>
     map((df: IDataFrame): IDataFrame => df.parseInts("new_cases")),
     map((df: IDataFrame): IDataFrame => df.parseInts("total_deaths")),
     map((df: IDataFrame): IDataFrame => df.parseInts("new_deaths")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("total_tests")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("new_tests")),
   );
 
 export const parsePopulationCSV = (data: string): Observable<IDataFrame> =>

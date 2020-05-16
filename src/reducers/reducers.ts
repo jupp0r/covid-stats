@@ -25,10 +25,13 @@ const loadingReducer = (state: LoadingState, action: Action): State => {
           caseChart: {
             logSetting: "logarithmic",
           },
+          dataTable: {
+            dateToDisplay: "yesterday",
+          },
         },
         routing: {
-          url: updateCountriesInPathName(state.routing.url, pickedCountries)
-        }
+          url: updateCountriesInPathName(state.routing.url, pickedCountries),
+        },
       };
     case "progress":
       return {
@@ -38,7 +41,9 @@ const loadingReducer = (state: LoadingState, action: Action): State => {
           [action.target]: {
             done: action.done,
             total: Math.max(state.progress[action.target].total, action.done),
-            ...(action.total !== 0 && { total: Math.max(action.total, action.done) }),
+            ...(action.total !== 0 && {
+              total: Math.max(action.total, action.done),
+            }),
           },
         },
       };
@@ -79,7 +84,24 @@ const loadedReducer = (state: LoadedState, action: Action): State => {
     case "country-search-changed":
       return { ...state, ui: { ...state.ui, searchText: action.search } };
     case "case-chart-log-setting-changed":
-      return {...state, ui: { ...state.ui, caseChart: {...state.ui.caseChart, logSetting: action.newSetting}}}
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          caseChart: { ...state.ui.caseChart, logSetting: action.newSetting },
+        },
+      };
+    case "data-table-date-selection-changed":
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          dataTable: {
+            ...state.ui.dataTable,
+            dateToDisplay: action.newSetting,
+          },
+        },
+      };
     default:
       return state;
   }
@@ -89,7 +111,7 @@ export const reducer = (state: State = initialState, action: Action): State => {
   if (action.type === "url-updated") {
     return { ...state, routing: { ...state.routing, url: action.url } };
   }
-  
+
   switch (state.type) {
     case "error":
       return errorReducer(state, action);

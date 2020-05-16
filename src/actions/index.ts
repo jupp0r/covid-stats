@@ -8,7 +8,8 @@ export type Action =
   | CountrySearchChangedAction
   | ProgressAction
   | UrlUpdatedAction
-  | CaseChartLogSettingChangedAction;
+  | CaseChartLogSettingChangedAction
+  | DataTableDateSelectionChangedAction;
 
 export interface InitialAction {
   type: "initialized";
@@ -94,5 +95,17 @@ export const makeCaseChartLogSettingChangedAction = (
   newSetting: "linear" | "logarithmic",
 ): CaseChartLogSettingChangedAction => ({
   type: "case-chart-log-setting-changed",
+  newSetting,
+});
+
+export interface DataTableDateSelectionChangedAction {
+  type: "data-table-date-selection-changed";
+  newSetting: "today" | "yesterday";
+}
+
+export const makeDataTableDateSelectionChangedAction = (
+  newSetting: "today" | "yesterday",
+): DataTableDateSelectionChangedAction => ({
+  type: "data-table-date-selection-changed",
   newSetting,
 });
