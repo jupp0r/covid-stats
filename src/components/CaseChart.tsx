@@ -1,5 +1,7 @@
 import React from "react";
 
+import { createSelector } from "reselect";
+
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
@@ -10,16 +12,27 @@ import { makeCaseChartLogSettingChangedAction } from "../actions";
 import { SpacedPaper } from "./SpacedPaper";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
+import { IDataFrame } from "data-forge";
+
+import {
+  pickedCountriesSelector,
+  dataSelector,
+  colorMapSelector,
+} from "../selectors";
+
 const selectDataToRenderIntoChart = (
-  state: LoadedState,
+  pickedCountries: string[],
+  data: IDataFrame,
+  colorMap: Map<string, string>,
 ): {
   name: string;
   data: [Date, number][];
   type: "line";
+  color: string | undefined;
 }[] =>
-  state.ui.pickedCountries.map((pickedCountry: string) => ({
+  pickedCountries.map((pickedCountry: string) => ({
     name: pickedCountry,
-    data: state.data
+    data: data
       .where(row => row.iso_code === pickedCountry)
       .toArray()
       .map(row => [
@@ -27,10 +40,18 @@ const selectDataToRenderIntoChart = (
         (row.total_cases * 1000000) / row.population,
       ]),
     type: "line",
+    color: colorMap.get(pickedCountry),
   }));
 
 export const CaseChart = () => {
-  const cases = useSelector(selectDataToRenderIntoChart);
+  const cases = useSelector(
+    createSelector(
+      pickedCountriesSelector,
+      dataSelector,
+      colorMapSelector,
+      selectDataToRenderIntoChart,
+    ),
+  );
   const logAxisSetting = useSelector(
     (state: LoadedState) => state.ui.caseChart.logSetting,
   );

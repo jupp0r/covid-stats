@@ -4,15 +4,27 @@ import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import { useSelector } from "react-redux";
-import { LoadedState } from "../store";
+import { IDataFrame } from "data-forge";
+
+import { createSelector } from "reselect";
 
 import { smooth } from "../store/data";
 
 import { SpacedPaper } from "./SpacedPaper";
 
-const deathCurveSelector = (state: LoadedState): SeriesOptionsType[] =>
-  state.ui.pickedCountries.map(country => {
-    const filteredByCountry = state.data.where(row => row.iso_code === country);
+import {
+  pickedCountriesSelector,
+  dataSelector,
+  colorMapSelector,
+} from "../selectors";
+
+const deathCurveSelector = (
+  pickedCountries: string[],
+  data: IDataFrame,
+  colorMap: Map<string, string>,
+): SeriesOptionsType[] =>
+  pickedCountries.map(country => {
+    const filteredByCountry = data.where(row => row.iso_code === country);
 
     const deaths = filteredByCountry.select(row => ({
       iso_code: row.iso_code,
@@ -24,6 +36,7 @@ const deathCurveSelector = (state: LoadedState): SeriesOptionsType[] =>
     return {
       name: country,
       type: "line",
+      color: colorMap.get(country),
       data: smooth(
         2,
         deaths
@@ -38,7 +51,14 @@ const deathCurveSelector = (state: LoadedState): SeriesOptionsType[] =>
   });
 
 export const DeathCurve = () => {
-  const deaths = useSelector(deathCurveSelector);
+  const deaths = useSelector(
+    createSelector(
+      pickedCountriesSelector,
+      dataSelector,
+      colorMapSelector,
+      deathCurveSelector,
+    ),
+  );
 
   const options: Highcharts.Options = {
     title: {
