@@ -18,12 +18,14 @@ import {
   pickedCountriesSelector,
   dataSelector,
   colorMapSelector,
+  countryNameSelector,
 } from "../selectors";
 
 const selectDataToRenderIntoChart = (
   pickedCountries: string[],
   data: IDataFrame,
   colorMap: Map<string, string>,
+  countryNameMap: Map<string, string>,
 ): {
   name: string;
   data: [Date, number][];
@@ -31,7 +33,7 @@ const selectDataToRenderIntoChart = (
   color: string | undefined;
 }[] =>
   pickedCountries.map((pickedCountry: string) => ({
-    name: pickedCountry,
+    name: countryNameMap.get(pickedCountry) || "",
     data: data
       .where(row => row.iso_code === pickedCountry)
       .toArray()
@@ -49,6 +51,7 @@ export const CaseChart = () => {
       pickedCountriesSelector,
       dataSelector,
       colorMapSelector,
+      countryNameSelector,
       selectDataToRenderIntoChart,
     ),
   );

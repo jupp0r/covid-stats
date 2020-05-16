@@ -11,6 +11,7 @@ import {
   pickedCountriesSelector,
   dataSelector,
   colorMapSelector,
+  countryNameSelector,
 } from "../selectors";
 
 import { red } from "@material-ui/core/colors";
@@ -21,14 +22,16 @@ export const NewCaseChart = () => {
       pickedCountriesSelector,
       dataSelector,
       colorMapSelector,
+      countryNameSelector,
       (
         pickedCountries: string[],
         data: IDataFrame,
         colorMap: Map<string, string>,
+        countryNameMap: Map<string, string>,
       ) =>
         pickedCountries.map(country => {
           const countryData = {
-            name: country,
+            name: countryNameMap.get(country),
             type: "column",
             color: colorMap.get(country),
             data: data
@@ -58,7 +61,7 @@ export const NewCaseChart = () => {
               width: "300",
             },
             title: {
-              text: country,
+              text: countryNameMap.get(country),
             },
             xAxis: {
               type: "datetime",

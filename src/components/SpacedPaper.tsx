@@ -19,7 +19,7 @@ const spacedPaper: React.FC<PaperProps & WithStyles<typeof withPadding>> = (
   props: PaperProps & WithStyles<typeof withPadding>,
 ) => (
   <Box my={3} py={3}>
-    <Paper {...props} className={props.classes.paperPadding}>
+    <Paper elevation={props.elevation} className={props.classes.paperPadding}>
       {props.children}
     </Paper>
   </Box>

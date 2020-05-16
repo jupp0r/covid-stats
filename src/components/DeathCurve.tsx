@@ -16,12 +16,14 @@ import {
   pickedCountriesSelector,
   dataSelector,
   colorMapSelector,
+  countryNameSelector,
 } from "../selectors";
 
 const deathCurveSelector = (
   pickedCountries: string[],
   data: IDataFrame,
   colorMap: Map<string, string>,
+  countryNameMap: Map<string, string>,
 ): SeriesOptionsType[] =>
   pickedCountries.map(country => {
     const filteredByCountry = data.where(row => row.iso_code === country);
@@ -34,7 +36,7 @@ const deathCurveSelector = (
     }));
 
     return {
-      name: country,
+      name: countryNameMap.get(country),
       type: "line",
       color: colorMap.get(country),
       data: smooth(
@@ -56,6 +58,7 @@ export const DeathCurve = () => {
       pickedCountriesSelector,
       dataSelector,
       colorMapSelector,
+      countryNameSelector,
       deathCurveSelector,
     ),
   );
