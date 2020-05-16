@@ -74,12 +74,13 @@ export const DeathCurve = () => {
         text: "Fraction of dead population",
       },
       min: 1e-6,
-      tickInterval: 1,
+      tickInterval: 0.1,
       labels: {
         step: 1,
         formatter: function () {
-          return this.value.toExponential(0);
+          return this.value.toExponential(1);
         },
+        rotation: -45,
       },
     },
     yAxis: {
@@ -87,12 +88,11 @@ export const DeathCurve = () => {
       title: {
         text: "Fraction of dead population per day (smoothed)",
       },
-      min: 1e-7,
-      tickInterval: 1,
+      tickInterval: 0.1,
       labels: {
         step: 1,
         formatter: function () {
-          return this.value.toExponential(0);
+          return this.value.toExponential(1);
         },
       },
     },

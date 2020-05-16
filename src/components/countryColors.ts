@@ -2,19 +2,13 @@ import {
   red,
   pink,
   purple,
-  deepPurple,
-  indigo,
   blue,
-  lightBlue,
   cyan,
   teal,
   green,
-  lightGreen,
   lime,
-  yellow,
   amber,
   orange,
-  deepOrange,
   brown,
   grey,
   blueGrey,
@@ -26,25 +20,19 @@ const colors = [
   red,
   pink,
   purple,
-  deepPurple,
-  indigo,
   blue,
-  lightBlue,
   cyan,
   teal,
   green,
-  lightGreen,
   lime,
-  yellow,
   amber,
   orange,
-  deepOrange,
   brown,
   grey,
   blueGrey,
 ];
 
-const shades = [300, 500, 900];
+const shades = [300, 600];
 
 export const makeCountryColors = (isoCodes: string[]): Map<string, string> => {
   let results = new Map<string, string>();
