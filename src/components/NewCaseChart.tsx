@@ -34,10 +34,13 @@ export const NewCaseChart = () => {
             data: data
               .where(
                 row =>
-                  row.iso_code === country && row.date > new Date("03-01-2020"),
+                  row.iso_code === country && row.date > new Date("02-14-2020"),
               )
               .toArray()
-              .map(row => [row.date.getTime(), row.new_cases])
+              .map(row => [
+                row.date.getTime(),
+                (row.new_cases * 1000000) / row.population,
+              ])
               .sort(),
           };
 
@@ -51,7 +54,7 @@ export const NewCaseChart = () => {
 
           const options: Highcharts.Options = {
             chart: {
-              height: "200",
+              height: "300",
               width: "300",
             },
             title: {
@@ -62,8 +65,9 @@ export const NewCaseChart = () => {
               tickInterval: 7 * 24 * 3600 * 1000,
             },
             yAxis: {
+              min: 0,
               title: {
-                text: "daily new cases",
+                text: "daily new cases per 1M population",
               },
             },
             legend: {
@@ -87,7 +91,7 @@ export const NewCaseChart = () => {
   return (
     <SpacedPaper elevation={3} id="new-cases">
       <h2>New Cases</h2>
-      <Grid container justify="center" spacing={5}>
+      <Grid container justify="center" spacing={0}>
         {countryCharts}
       </Grid>
     </SpacedPaper>

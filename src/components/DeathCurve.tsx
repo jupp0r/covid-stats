@@ -38,7 +38,7 @@ const deathCurveSelector = (
       type: "line",
       color: colorMap.get(country),
       data: smooth(
-        2,
+        7,
         deaths
           .toArray()
           .map(row => [
