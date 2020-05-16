@@ -63,7 +63,6 @@ export const makeCountryColors = (isoCodes: string[]): Map<string, string> => {
 
       picked = (color as any)[shade.toString()];
  
-      console.log(`picked color ${picked} for country ${country}`);
     } while (pickedColors.has(picked) && pickedColors.size < colors.length * shades.length);
    
 
