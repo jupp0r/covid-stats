@@ -117,6 +117,9 @@ export const DataTable = () => {
       ),
     }));
 
+  const numberWithCommas = (field: string) => (rowData: any) =>
+    rowData[field].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
   const columns: Column<any>[] = [
     {
       title: "Country",
@@ -127,21 +130,25 @@ export const DataTable = () => {
       field: "total_cases",
       type: "numeric",
       defaultSort: "desc",
+      render: numberWithCommas("total_cases"),
     },
     {
       title: "New Cases",
       field: "new_cases",
       type: "numeric",
+      render: numberWithCommas("new_cases"),
     },
     {
       title: "Tests per 1M population",
       field: "tests_per_1m_population",
       type: "numeric",
+      render: numberWithCommas("tests_per_1m_population"),
     },
     {
       title: "Total Tests",
       field: "total_tests",
       type: "numeric",
+      render: numberWithCommas("total_tests"),
     },
   ];
 
@@ -156,6 +163,13 @@ export const DataTable = () => {
     }
 
     dispatch(makeDataTableDateSelectionChangedAction(newSetting));
+  };
+
+  const options = {
+    fixedColumns: {
+      left: 1,
+      right: 0,
+    },
   };
 
   return (
@@ -178,6 +192,7 @@ export const DataTable = () => {
         data={tableData}
         title="Country Table"
         icons={tableIcons}
+        options={options}
       ></MaterialTable>
     </SpacedPaper>
   );
