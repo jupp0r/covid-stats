@@ -2,11 +2,11 @@ import React from "react";
 
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-
 import { useSelector } from "react-redux";
 import { IDataFrame } from "data-forge";
-
 import { createSelector } from "reselect";
+
+import { useMediaQuery } from "@material-ui/core";
 
 import { smooth } from "../store/data";
 
@@ -63,12 +63,14 @@ export const DeathCurve = () => {
     ),
   );
 
+  const wide = useMediaQuery("(min-width:600px)");
+
   const options: Highcharts.Options = {
     title: {
       text: "",
     },
     chart: {
-      height: "50%",
+      height: wide ? "50%" : "100%",
       zoomType: "xy",
     },
     xAxis: {
@@ -79,7 +81,7 @@ export const DeathCurve = () => {
       min: 1e-6,
       tickInterval: 0.1,
       labels: {
-        step: 1,
+        step: wide ? 1 : 5,
         formatter: function () {
           return this.value.toExponential(1);
         },

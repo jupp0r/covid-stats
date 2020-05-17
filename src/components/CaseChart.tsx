@@ -2,7 +2,7 @@ import React from "react";
 
 import { createSelector } from "reselect";
 
-import Highcharts from "highcharts";
+import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import { LoadedState } from "../store";
@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { makeCaseChartLogSettingChangedAction } from "../actions";
 
 import { SpacedPaper } from "./SpacedPaper";
+import { useMediaQuery } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 import { IDataFrame } from "data-forge";
@@ -26,12 +27,7 @@ const selectDataToRenderIntoChart = (dataSelector: (row: any) => number) => (
   data: IDataFrame,
   colorMap: Map<string, string>,
   countryNameMap: Map<string, string>,
-): {
-  name: string;
-  data: [Date, number][];
-  type: "line";
-  color: string | undefined;
-}[] =>
+): SeriesOptionsType[] =>
   pickedCountries.map((pickedCountry: string) => ({
     name: countryNameMap.get(pickedCountry) || "",
     data: data
@@ -41,6 +37,43 @@ const selectDataToRenderIntoChart = (dataSelector: (row: any) => number) => (
     type: "line",
     color: colorMap.get(pickedCountry),
   }));
+
+const makeHighchartsOptions = ({
+  logAxisSetting,
+  cases,
+  wide,
+}: {
+  logAxisSetting: "linear" | "logarithmic";
+  cases: SeriesOptionsType[];
+  wide: boolean;
+}): Highcharts.Options => ({
+  chart: {
+    height: wide ? "50%" : "100%",
+    zoomType: "x",
+  },
+  title: {
+    text: "",
+  },
+  xAxis: {
+    type: "datetime",
+    title: {
+      text: "Date",
+    },
+    labels: {
+      step: 1,
+    },
+  },
+  yAxis: {
+    type: logAxisSetting,
+    title: {
+      text: "Cases per 1M population",
+    },
+  },
+  series: cases,
+  credits: {
+    enabled: false,
+  },
+});
 
 export const CaseChart = () => {
   const cases = useSelector(
@@ -58,35 +91,6 @@ export const CaseChart = () => {
     (state: LoadedState) => state.ui.caseChart.logSetting,
   );
 
-  const options: Highcharts.Options = {
-    chart: {
-      height: "50%",
-      zoomType: "x",
-    },
-    title: {
-      text: "",
-    },
-    xAxis: {
-      type: "datetime",
-      title: {
-        text: "Date",
-      },
-      labels: {
-        step: 1,
-      },
-    },
-    yAxis: {
-      type: logAxisSetting,
-      title: {
-        text: "Cases per 1M population",
-      },
-    },
-    series: cases,
-    credits: {
-      enabled: false,
-    },
-  };
-
   const dispatch = useDispatch();
   const handleAxisLogarithmicToggle = (_: any, newSetting: string | null) => {
     if (!newSetting) {
@@ -99,6 +103,9 @@ export const CaseChart = () => {
 
     dispatch(makeCaseChartLogSettingChangedAction(newSetting));
   };
+
+  const wide = useMediaQuery("(min-width:600px)");
+  const options = makeHighchartsOptions({ logAxisSetting, cases, wide });
 
   return (
     <SpacedPaper id="cases" elevation={3}>
@@ -137,34 +144,8 @@ export const DeathChart = () => {
     (state: LoadedState) => state.ui.caseChart.logSetting,
   );
 
-  const options: Highcharts.Options = {
-    chart: {
-      height: "50%",
-      zoomType: "x",
-    },
-    title: {
-      text: "",
-    },
-    xAxis: {
-      type: "datetime",
-      title: {
-        text: "Date",
-      },
-      labels: {
-        step: 1,
-      },
-    },
-    yAxis: {
-      type: logAxisSetting,
-      title: {
-        text: "Deaths per 1M population",
-      },
-    },
-    series: cases,
-    credits: {
-      enabled: false,
-    },
-  };
+  const wide = useMediaQuery("(min-width:600px)");
+  const options = makeHighchartsOptions({ logAxisSetting, cases, wide });
 
   const dispatch = useDispatch();
   const handleAxisLogarithmicToggle = (_: any, newSetting: string | null) => {
