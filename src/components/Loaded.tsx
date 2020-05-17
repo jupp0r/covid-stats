@@ -1,10 +1,10 @@
 import React from "react";
 
-import { CaseChart } from "./CaseChart";
+import { CaseChart, DeathChart } from "./CaseChart";
 import { CountryPicker } from "./CountryPicker";
 import { DataTable } from "./DataTable";
 import { DeathCurve } from "./DeathCurve";
-import { NewCaseChart } from "./NewCaseChart";
+import { NewCaseChart, NewDeathChart } from "./NewCaseChart";
 
 const centered: React.CSSProperties = { textAlign: "center" };
 
@@ -15,7 +15,9 @@ export const Loaded = () => {
       <DataTable />
       <CountryPicker />
       <NewCaseChart />
+      <NewDeathChart />
       <CaseChart />
+      <DeathChart />
       <DeathCurve />
       <div style={centered}>
         data from{" "}

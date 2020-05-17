@@ -21,7 +21,7 @@ import {
   countryNameSelector,
 } from "../selectors";
 
-const selectDataToRenderIntoChart = (
+const selectDataToRenderIntoChart = (dataSelector: (row: any) => number) => (
   pickedCountries: string[],
   data: IDataFrame,
   colorMap: Map<string, string>,
@@ -37,10 +37,7 @@ const selectDataToRenderIntoChart = (
     data: data
       .where(row => row.iso_code === pickedCountry)
       .toArray()
-      .map(row => [
-        row.date.getTime(),
-        (row.total_cases * 1000000) / row.population,
-      ]),
+      .map(row => [row.date.getTime(), dataSelector(row)]),
     type: "line",
     color: colorMap.get(pickedCountry),
   }));
@@ -52,7 +49,9 @@ export const CaseChart = () => {
       dataSelector,
       colorMapSelector,
       countryNameSelector,
-      selectDataToRenderIntoChart,
+      selectDataToRenderIntoChart(
+        row => (row.total_cases * 1000000) / row.population,
+      ),
     ),
   );
   const logAxisSetting = useSelector(
@@ -104,6 +103,85 @@ export const CaseChart = () => {
   return (
     <SpacedPaper id="cases" elevation={3}>
       <h2>Cases over Time</h2>
+      <ToggleButtonGroup
+        value={logAxisSetting}
+        onChange={handleAxisLogarithmicToggle}
+        exclusive
+        aria-label="log axis setting"
+      >
+        <ToggleButton value="logarithmic" aria-label="logarithmic">
+          log
+        </ToggleButton>
+        <ToggleButton value="linear" aria-label="linear">
+          linear
+        </ToggleButton>
+      </ToggleButtonGroup>
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </SpacedPaper>
+  );
+};
+
+export const DeathChart = () => {
+  const cases = useSelector(
+    createSelector(
+      pickedCountriesSelector,
+      dataSelector,
+      colorMapSelector,
+      countryNameSelector,
+      selectDataToRenderIntoChart(
+        row => (row.total_deaths * 1000000) / row.population,
+      ),
+    ),
+  );
+  const logAxisSetting = useSelector(
+    (state: LoadedState) => state.ui.caseChart.logSetting,
+  );
+
+  const options: Highcharts.Options = {
+    chart: {
+      height: "50%",
+      zoomType: "x",
+    },
+    title: {
+      text: "",
+    },
+    xAxis: {
+      type: "datetime",
+      title: {
+        text: "Date",
+      },
+      labels: {
+        step: 1,
+      },
+    },
+    yAxis: {
+      type: logAxisSetting,
+      title: {
+        text: "Deaths per 1M population",
+      },
+    },
+    series: cases,
+    credits: {
+      enabled: false,
+    },
+  };
+
+  const dispatch = useDispatch();
+  const handleAxisLogarithmicToggle = (_: any, newSetting: string | null) => {
+    if (!newSetting) {
+      return;
+    }
+
+    if (!(newSetting === "linear" || newSetting === "logarithmic")) {
+      return;
+    }
+
+    dispatch(makeCaseChartLogSettingChangedAction(newSetting));
+  };
+
+  return (
+    <SpacedPaper id="cases" elevation={3}>
+      <h2>Deaths over Time</h2>
       <ToggleButtonGroup
         value={logAxisSetting}
         onChange={handleAxisLogarithmicToggle}

@@ -16,6 +16,68 @@ import {
 
 import { red } from "@material-ui/core/colors";
 
+const newSelector = (selector: (row: any) => number) => (
+  pickedCountries: string[],
+  data: IDataFrame,
+  colorMap: Map<string, string>,
+  countryNameMap: Map<string, string>,
+) =>
+  pickedCountries.map(country => {
+    const countryData = {
+      name: countryNameMap.get(country),
+      type: "column",
+      color: colorMap.get(country),
+      data: data
+        .where(
+          row => row.iso_code === country && row.date > new Date("02-14-2020"),
+        )
+        .toArray()
+        .map(row => [row.date.getTime(), selector(row)])
+        .sort(),
+    };
+
+    const movingAverage: SeriesOptionsType = {
+      name: "7 day average",
+      data: smooth(3, countryData.data),
+      type: "line",
+      color: red[900],
+      enableMouseTracking: false,
+    };
+
+    const options: Highcharts.Options = {
+      chart: {
+        height: "300",
+        width: "300",
+      },
+      title: {
+        text: countryNameMap.get(country),
+      },
+      xAxis: {
+        type: "datetime",
+        tickInterval: 7 * 24 * 3600 * 1000,
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: "daily new cases per 1M population",
+        },
+      },
+      legend: {
+        enabled: false,
+      },
+      series: [countryData as SeriesOptionsType, movingAverage],
+      credits: {
+        enabled: false,
+      },
+    };
+
+    return (
+      <Grid item key={country}>
+        <HighchartsReact highcharts={Highcharts} options={options} />
+      </Grid>
+    );
+  });
+
 export const NewCaseChart = () => {
   const countryCharts = useSelector(
     createSelector(
@@ -23,77 +85,34 @@ export const NewCaseChart = () => {
       dataSelector,
       colorMapSelector,
       countryNameSelector,
-      (
-        pickedCountries: string[],
-        data: IDataFrame,
-        colorMap: Map<string, string>,
-        countryNameMap: Map<string, string>,
-      ) =>
-        pickedCountries.map(country => {
-          const countryData = {
-            name: countryNameMap.get(country),
-            type: "column",
-            color: colorMap.get(country),
-            data: data
-              .where(
-                row =>
-                  row.iso_code === country && row.date > new Date("02-14-2020"),
-              )
-              .toArray()
-              .map(row => [
-                row.date.getTime(),
-                (row.new_cases * 1000000) / row.population,
-              ])
-              .sort(),
-          };
-
-          const movingAverage: SeriesOptionsType = {
-            name: "7 day average",
-            data: smooth(3, countryData.data),
-            type: "line",
-            color: red[900],
-            enableMouseTracking: false,
-          };
-
-          const options: Highcharts.Options = {
-            chart: {
-              height: "300",
-              width: "300",
-            },
-            title: {
-              text: countryNameMap.get(country),
-            },
-            xAxis: {
-              type: "datetime",
-              tickInterval: 7 * 24 * 3600 * 1000,
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                text: "daily new cases per 1M population",
-              },
-            },
-            legend: {
-              enabled: false,
-            },
-            series: [countryData as SeriesOptionsType, movingAverage],
-            credits: {
-              enabled: false,
-            },
-          };
-
-          return (
-            <Grid item key={country}>
-              <HighchartsReact highcharts={Highcharts} options={options} />
-            </Grid>
-          );
-        }),
+      newSelector(row => (row.new_cases * 1000000) / row.population),
     ),
   );
 
   return (
     <SpacedPaper elevation={3} id="new-cases">
       <h2>New Cases</h2>
+      <Grid container justify="center" spacing={0}>
+        {countryCharts}
+      </Grid>
+    </SpacedPaper>
+  );
+};
+
+export const NewDeathChart = () => {
+  const countryCharts = useSelector(
+    createSelector(
+      pickedCountriesSelector,
+      dataSelector,
+      colorMapSelector,
+      countryNameSelector,
+      newSelector(row => (row.new_deaths * 1000000) / row.population),
+    ),
+  );
+
+  return (
+    <SpacedPaper elevation={3} id="new-deaths">
+      <h2>New Deaths</h2>
       <Grid container justify="center" spacing={0}>
         {countryCharts}
       </Grid>
