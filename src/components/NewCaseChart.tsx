@@ -29,7 +29,7 @@ const newSelector = (selector: (row: any) => number) => (
       color: colorMap.get(country),
       data: data
         .where(
-          row => row.iso_code === country && row.date > new Date("02-14-2020"),
+          row => row.iso_code === country && row.date > new Date(2020, 2, 14),
         )
         .toArray()
         .map(row => [row.date.getTime(), selector(row)])
