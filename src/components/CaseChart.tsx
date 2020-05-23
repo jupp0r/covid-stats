@@ -169,11 +169,11 @@ export const DeathChart = () => {
         exclusive
         aria-label="log axis setting"
       >
-        <ToggleButton value="logarithmic" aria-label="logarithmic">
-          log
-        </ToggleButton>
         <ToggleButton value="linear" aria-label="linear">
           linear
+        </ToggleButton>
+        <ToggleButton value="logarithmic" aria-label="logarithmic">
+          log
         </ToggleButton>
       </ToggleButtonGroup>
       <HighchartsReact highcharts={Highcharts} options={options} />

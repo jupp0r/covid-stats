@@ -23,7 +23,7 @@ const loadingReducer = (state: LoadingState, action: Action): State => {
           pickedCountries,
           searchText: "",
           caseChart: {
-            logSetting: "logarithmic",
+            logSetting: "linear",
           },
           dataTable: {
             dateToDisplay: "yesterday",

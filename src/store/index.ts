@@ -63,7 +63,15 @@ export const initialState: State = {
   }
 };
 
-export const defaultCountries = ["USA", "DEU", "SWE", "ITA", "NGA"];
+export const defaultCountries = [
+         "USA",
+         "DEU",
+         "SWE",
+         "ITA",
+         "NGA",
+         "RUS",
+         "BRA",
+       ];
 
 export type Store = ReduxStore<State, Action>;
 
