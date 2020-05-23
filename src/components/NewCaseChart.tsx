@@ -16,7 +16,7 @@ import {
 
 import { red } from "@material-ui/core/colors";
 
-const newSelector = (selector: (row: any) => number) => (
+const newSelector = (selector: (row: any) => number, title: string) => (
   pickedCountries: string[],
   data: IDataFrame,
   colorMap: Map<string, string>,
@@ -59,7 +59,7 @@ const newSelector = (selector: (row: any) => number) => (
       yAxis: {
         min: 0,
         title: {
-          text: "daily new cases per 1M population",
+          text: title,
         },
       },
       legend: {
@@ -85,7 +85,10 @@ export const NewCaseChart = () => {
       dataSelector,
       colorMapSelector,
       countryNameSelector,
-      newSelector(row => (row.new_cases * 1000000) / row.population),
+      newSelector(
+        row => (row.new_cases * 1000000) / row.population,
+        "daily new cases per 1M population",
+      ),
     ),
   );
 
@@ -106,7 +109,10 @@ export const NewDeathChart = () => {
       dataSelector,
       colorMapSelector,
       countryNameSelector,
-      newSelector(row => (row.new_deaths * 1000000) / row.population),
+      newSelector(
+        row => (row.new_deaths * 1000000) / row.population,
+        "daily new deaths per 1M population",
+      ),
     ),
   );
 
