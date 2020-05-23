@@ -24,6 +24,8 @@ export type LoadingState = {
   progress: {
     covid: Progress;
     population: Progress;
+    us: Progress;
+    stateInfo: Progress;
   };
 } & RoutingState;
 
@@ -49,14 +51,19 @@ export type ErrorState = {
   message: string;
 } & RoutingState;
 
+/// approximate download sizes for the progress bar in case servers don't send Content-Length
 const covidSizeEstimate = 2459742;
 const populationSizeEstimate = 487991;
+const usDataEstimate = 679331;
+const stateInfoEstimate = 25842;
 
 export const initialState: State = {
   type: "loading",
   progress: {
     covid: { done: 0, total: covidSizeEstimate },
     population: { done: 0, total: populationSizeEstimate },
+    us: { done: 0, total: usDataEstimate },
+    stateInfo: { done: 0, total: stateInfoEstimate },
   },
   routing: {
     url: window.location.toString(),

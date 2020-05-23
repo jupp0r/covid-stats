@@ -14,17 +14,28 @@ export const Loading = () => {
   return (
     <SpacedPaper>
       <div>
-        <h2>loading covid data</h2>
+        <h2>loading world covid data</h2>
         <LinearProgress
           variant="determinate"
           value={normalize(progress.covid)}
         />
       </div>
       <div>
+        <h2>loading US covid data</h2>
+        <LinearProgress variant="determinate" value={normalize(progress.us)} />
+      </div>
+      <div>
         <h2>loading world population data</h2>
         <LinearProgress
           variant="determinate"
           value={normalize(progress.population)}
+        />
+      </div>
+      <div>
+        <h2>loading US state data</h2>
+        <LinearProgress
+          variant="determinate"
+          value={normalize(progress.stateInfo)}
         />
       </div>
     </SpacedPaper>

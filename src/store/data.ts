@@ -36,6 +36,14 @@ export const parsePopulationCSV = (data: string): Observable<IDataFrame> =>
     ),
   );
 
+export const parseUsCSV = (data: string): Observable<IDataFrame> =>
+  of(fromCSV(data)).pipe(
+    map((df: IDataFrame): IDataFrame => df.parseDates("date")),
+  );
+
+export const parseUsStateInfoCSV = (data: string): Observable<IDataFrame> =>
+  of(fromCSV(data));
+
 export const transformCsvData = (data: IDataFrame): IDataFrame => data;
 
 type Maximums = Map<string, number>;
@@ -58,9 +66,11 @@ const computeLatestPopulation = (population: IDataFrame): IDataFrame =>
     })
     .inflate();
 
-export const mergeCovidPopulation = (
+export const mergeData = (
   covid: IDataFrame,
   population: IDataFrame,
+  us: IDataFrame,
+  stateInfo: IDataFrame
 ): IDataFrame => {
   const populationLatest = computeLatestPopulation(population);
   return covid.join(

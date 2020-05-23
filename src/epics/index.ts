@@ -1,115 +1,60 @@
 import { Observable, zip, merge } from "rxjs";
 
-import { filter, flatMap, map } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 
-import { Action, makeProgressAction, ProgressAction } from "../actions";
+import { ofType } from 'redux-observable';
+
+import { Action, ProgressAction } from "../actions";
 
 import { combineEpics } from "redux-observable";
 
 import {
   parseCovidCSV,
   parsePopulationCSV,
-  mergeCovidPopulation,
+  parseUsCSV,
+  parseUsStateInfoCSV,
+  mergeData,
 } from "../store/data";
-import { IDataFrame } from "data-forge";
-
-type DataResult =
-  | { type: "success"; data: IDataFrame }
-  | { type: "error"; reason: string };
-
-interface Progress {
-  done: number;
-  total: number;
-}
-
-const fromXhr = (
-  url: string,
-): {
-  progress: Observable<Progress>;
-  result: Observable<string>;
-} => {
-  const xhr = new XMLHttpRequest();
-  xhr.responseType = "text";
-  const progress$ = new Observable<Progress>((subscriber): void => {
-    xhr.addEventListener("progress", ev =>
-      subscriber.next({
-        done: ev.loaded,
-        total: ev.total,
-      }),
-    );
-  });
-
-  const result$ = new Observable<string>(subscriber => {
-    xhr.addEventListener("readystatechange", ev => {
-      if (xhr.readyState !== 4) {
-        return;
-      }
-
-      if (xhr.status === 200) {
-        subscriber.next(xhr.response);
-        subscriber.complete();
-      } else {
-        subscriber.error(xhr.response);
-      }
-    });
-  });
-
-  xhr.open("GET", url);
-  xhr.send();
-  return { progress: progress$, result: result$ };
-};
+import { makeProgressStream, DataResult } from "./util";
 
 export const startLoadingEpic = (
   action$: Observable<Action>,
 ): Observable<Action> => {
-  const covidData$: Observable<ProgressAction | DataResult> = action$.pipe(
-    filter((action: Action) => action.type === "initialized"),
-    flatMap(() => {
-      const { progress, result } = fromXhr(
-        "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv",
-      );
-      const progress$ = progress.pipe(
-        map((update: Progress) =>
-          makeProgressAction({ ...update, target: "covid" }),
-        ),
-      );
-
-      const result$ = result.pipe(
-        flatMap(parseCovidCSV),
-        map((data: IDataFrame): DataResult => ({ type: "success", data })),
-      );
-
-      return merge(progress$, result$);
-    }),
+  const covidData$ = makeProgressStream(
+    action$,
+    "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv",
+    parseCovidCSV,
+    "covid",
   );
 
-  const populationData$: Observable<ProgressAction | DataResult> = action$.pipe(
-    filter((action: Action) => action.type === "initialized"),
-    flatMap(() => {
-      const { progress, result } = fromXhr(
-        "https://raw.githubusercontent.com/datasets/population/master/data/population.csv",
-      );
-      const progress$ = progress.pipe(
-        map((update: Progress) =>
-          makeProgressAction({ ...update, target: "population" }),
-        ),
-      );
+  const populationData$ = makeProgressStream(
+    action$,
+    "https://raw.githubusercontent.com/datasets/population/master/data/population.csv",
+    parsePopulationCSV,
+    "population"
+  );
 
-      const result$ = result.pipe(
-        flatMap(parsePopulationCSV),
-        map((data: IDataFrame): DataResult => ({ type: "success", data })),
-      );
+  const usData$ = makeProgressStream(
+    action$,
+    "https://covidtracking.com/api/v1/states/daily.csv",
+    parseUsCSV,
+    "us",
+  );
 
-      return merge(progress$, result$);
-    }),
+  const stateInfo$ = makeProgressStream(
+    action$,
+    "https://covidtracking.com/api/v1/states/info.csv",
+    parseUsStateInfoCSV,
+    "stateInfo",
   );
 
   const combinedProgress$: Observable<ProgressAction> = merge(
     covidData$,
     populationData$,
+    usData$,
+    stateInfo$,
   ).pipe(
-    filter(item => item.type === "progress"),
-    map(item => item as ProgressAction),
+    ofType("progress"),
   );
 
   const filterForResult = (data$: Observable<ProgressAction | DataResult>) =>
@@ -118,13 +63,20 @@ export const startLoadingEpic = (
   const combinedResults$: Observable<Action> = zip(
     filterForResult(covidData$),
     filterForResult(populationData$),
+    filterForResult(usData$),
+    filterForResult(stateInfo$),
   ).pipe(
     map(
-      ([covid, population]): Action => {
-        if (covid.type === "success" && population.type === "success") {
+      ([covid, population, us, stateInfo]): Action => {
+        if (
+          covid.type === "success" &&
+          population.type === "success" &&
+          us.type === "success" &&
+          stateInfo.type === "success"
+        ) {
           return {
             type: "fetch-success",
-            response: mergeCovidPopulation(covid.data, population.data),
+            response: mergeData(covid.data, population.data, us.data, stateInfo.data),
           };
         } else {
           return {

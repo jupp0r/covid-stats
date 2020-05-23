@@ -61,15 +61,17 @@ export const makeCoutrySearchChangedAction = (
   search,
 });
 
+export type DownloadCategory = "covid" | "population" | "us" | "stateInfo";
+
 export interface ProgressAction {
   type: "progress";
-  target: "covid" | "population";
+  target: DownloadCategory;
   done: number;
   total: number;
 }
 
 export const makeProgressAction = (progress: {
-  target: "covid" | "population";
+  target: DownloadCategory;
   done: number;
   total: number;
 }): ProgressAction => {
