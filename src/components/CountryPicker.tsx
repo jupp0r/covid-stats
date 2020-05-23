@@ -21,7 +21,7 @@ const pickedCountriesSelector = (state: LoadedState) =>
   state.ui.pickedCountries;
 const searchTextSelector = (state: LoadedState) => state.ui.searchText;
 
-const coutrySelector = createSelector(
+const countrySelector = createSelector(
   dataSelector,
   pickedCountriesSelector,
   searchTextSelector,
@@ -55,7 +55,7 @@ export const CountryPicker = () => {
     width: "180px",
   };
 
-  const allCountries = useSelector(coutrySelector).map(
+  const allCountries = useSelector(countrySelector).map(
     ({ iso_code, location, active }) => (
       <ListItem
         button

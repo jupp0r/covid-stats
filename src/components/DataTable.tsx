@@ -26,6 +26,10 @@ import { ToggleButtonGroup, ToggleButton } from "@material-ui/lab";
 import { makeDataTableDateSelectionChangedAction } from "../actions";
 
 import { IDataFrame } from "data-forge";
+import { Checkbox } from "@material-ui/core";
+import { includes } from "lodash/fp";
+
+import { makeCountryToggleAction } from "../actions";
 
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -58,6 +62,11 @@ const datesAreOnSameDay = (first: Date, second: Date) =>
 
 export const DataTable = () => {
   const data = useSelector((state: LoadedState) => state.data);
+  const pickedCountriesSelector = (state: LoadedState) =>
+    state.ui.pickedCountries;
+  const pickedCountries = useSelector(pickedCountriesSelector);
+  const isSelected = (iso_code: string) => includes(iso_code)(pickedCountries);
+
   const dateToDisplay = useSelector(
     (state: LoadedState) => state.ui.dataTable.dateToDisplay,
   );
@@ -124,6 +133,15 @@ export const DataTable = () => {
     {
       title: "Country",
       field: "location",
+      render: row => (
+        <>
+          <Checkbox
+            checked={isSelected(row.iso_code)}
+            onChange={_ => dispatch(makeCountryToggleAction(row.iso_code))}
+          />{" "}
+          {row.location}
+        </>
+      ),
     },
     {
       title: "Total Cases",
