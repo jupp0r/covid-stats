@@ -1,26 +1,21 @@
-import React from "react";
-
-import { createSelector } from "reselect";
-
-import Highcharts, { SeriesOptionsType } from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-
-import { LoadedState } from "../store";
-import { useSelector, useDispatch } from "react-redux";
-import { makeCaseChartLogSettingChangedAction } from "../actions";
-
-import { SpacedPaper } from "./SpacedPaper";
 import { useMediaQuery } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
-
 import { IDataFrame } from "data-forge";
+import Highcharts, { SeriesOptionsType } from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import React from "react";
+import { useDispatch,useSelector } from "react-redux";
+import { createSelector } from "reselect";
 
+import { makeCaseChartLogSettingChangedAction } from "../actions";
 import {
-  pickedCountriesSelector,
-  dataSelector,
   colorMapSelector,
   countryNameSelector,
+  dataSelector,
+  pickedCountriesSelector,
 } from "../selectors";
+import { LoadedState } from "../store";
+import { SpacedPaper } from "./SpacedPaper";
 
 const selectDataToRenderIntoChart = (dataSelector: (row: any) => number) => (
   pickedCountries: string[],

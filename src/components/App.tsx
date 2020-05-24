@@ -1,18 +1,15 @@
-import React from "react";
-import { useSelector } from "react-redux";
 import "./App.css";
-import "github-fork-ribbon-css/gh-fork-ribbon.css";
-
-import { State } from "../store";
-
-import { Loading } from "./Loading";
-import { Loaded } from "./Loaded";
-import { Error } from "./Error";
-
-import { assertNever } from "../utils";
 import "./highchartsTheme";
 
 import Box from "@material-ui/core/Box";
+import React from "react";
+import { useSelector } from "react-redux";
+
+import { State } from "../store";
+import { assertNever } from "../utils";
+import { Error } from "./Error";
+import { Loaded } from "./Loaded";
+import { Loading } from "./Loading";
 
 export const App = () => {
   const type = useSelector<State, State["type"]>(state => state.type);
