@@ -1,5 +1,6 @@
 import "./App.css";
 import "./highchartsTheme";
+import "github-fork-ribbon-css/gh-fork-ribbon.css";
 
 import Box from "@material-ui/core/Box";
 import React from "react";
