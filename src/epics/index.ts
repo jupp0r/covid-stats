@@ -43,7 +43,7 @@ export const startLoadingEpic = (
 
   const stateInfo$ = makeProgressStream(
     action$,
-    "https://covidtracking.com/api/v1/states/info.csv",
+    "https://raw.githubusercontent.com/CivilServiceUSA/us-states/master/data/states.csv",
     parseUsStateInfoCSV,
     "stateInfo",
   );

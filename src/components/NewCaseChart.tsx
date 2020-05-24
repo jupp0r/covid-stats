@@ -14,6 +14,8 @@ import {
   countryNameSelector,
 } from "../selectors";
 
+import { Row } from "../store/data";
+
 import { red } from "@material-ui/core/colors";
 
 const newSelector = (selector: (row: any) => number, title: string) => (
@@ -29,7 +31,8 @@ const newSelector = (selector: (row: any) => number, title: string) => (
       color: colorMap.get(country),
       data: data
         .where(
-          row => row.iso_code === country && row.date > new Date(2020, 2, 14),
+          (row: Row) =>
+            row.iso_code === country && row.date > new Date(2020, 2, 14),
         )
         .toArray()
         .map(row => [row.date.getTime(), selector(row)])
@@ -86,7 +89,7 @@ export const NewCaseChart = () => {
       colorMapSelector,
       countryNameSelector,
       newSelector(
-        row => (row.new_cases * 1000000) / row.population,
+        (row: Row) => (row.new_cases * 1000000) / row.population,
         "daily new cases per 1M population",
       ),
     ),
@@ -110,7 +113,7 @@ export const NewDeathChart = () => {
       colorMapSelector,
       countryNameSelector,
       newSelector(
-        row => (row.new_deaths * 1000000) / row.population,
+        (row: Row) => (row.new_deaths * 1000000) / row.population,
         "daily new deaths per 1M population",
       ),
     ),

@@ -30,6 +30,7 @@ import { Checkbox } from "@material-ui/core";
 import { includes } from "lodash/fp";
 
 import { makeCountryToggleAction } from "../actions";
+import { Row } from "../store/data";
 
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -62,6 +63,7 @@ const datesAreOnSameDay = (first: Date, second: Date) =>
 
 export const DataTable = () => {
   const data = useSelector((state: LoadedState) => state.data);
+
   const pickedCountriesSelector = (state: LoadedState) =>
     state.ui.pickedCountries;
   const pickedCountries = useSelector(pickedCountriesSelector);
@@ -79,18 +81,21 @@ export const DataTable = () => {
   const selectedDate = dateToDisplay === "today" ? today : yesterday;
 
   const findFirstRowMachingDate = (
-    group: IDataFrame,
+    group: IDataFrame<number, Row>,
     date: Date,
-    field: string,
+    field: keyof Row,
   ) => {
-    const filtered: IDataFrame = group.where((row: { date: Date }) =>
+    const filtered: IDataFrame<
+      number,
+      Row
+    > = group.where((row: { date: Date }) =>
       datesAreOnSameDay(row.date, selectedDate),
     );
 
     if (filtered.count() === 0) {
       const filteredByAnythingPresent = group
         .orderByDescending(row => row.date)
-        .where(row => row[field]);
+        .where((row: Row) => row[field] !== undefined);
 
       if (filteredByAnythingPresent.count() === 0) {
         return undefined;
@@ -103,8 +108,8 @@ export const DataTable = () => {
   };
 
   const tableData = data
-    .orderByDescending(row => row.date)
-    .groupBy(row => row.iso_code)
+    .orderByDescending((row: Row) => row.date)
+    .groupBy((row: Row) => row.iso_code)
     .select(group => ({
       date: group.first().date,
       iso_code: group.first().iso_code,
@@ -133,7 +138,7 @@ export const DataTable = () => {
     {
       title: "Country",
       field: "location",
-      render: row => (
+      render: (row: Row) => (
         <>
           <Checkbox
             checked={isSelected(row.iso_code)}

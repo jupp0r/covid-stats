@@ -24,7 +24,6 @@ export const countryNameSelector = createSelector(
       }))
       .toArray()
       .map(({ code, name }) => [code, name]);
-    console.log(kvPairs);
     return new Map(
       kvPairs,
     );

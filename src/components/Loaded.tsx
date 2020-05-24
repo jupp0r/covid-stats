@@ -21,10 +21,12 @@ export const Loaded = () => {
       <DeathCurve />
       <div style={centered}>
         data from{" "}
-        <a href="https://covid.ourworldindata.org">Our World In Data</a> and{" "}
+        <a href="https://covid.ourworldindata.org">Our World In Data</a>,{" "}
         <a href="https://github.com/datasets/population">
           datahub.io via the World Bank
-        </a>
+        </a>{" "}
+        , <a href="https://covidtracking.com/">The Covid Tracking Project</a>{" "}
+        and <a href="https://civil.services">Civil Services</a>
       </div>
     </div>
   );

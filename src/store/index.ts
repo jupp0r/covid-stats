@@ -7,6 +7,7 @@ import { IDataFrame } from "data-forge";
 import { Store as ReduxStore } from "redux";
 import { Action } from "../actions";
 import { setupRouting } from "../reducers/router";
+import { Row } from "./data";
 
 export type State = (LoadingState | LoadedState | ErrorState);
 interface RoutingState {
@@ -42,7 +43,7 @@ export type UIState = {
 
 export type LoadedState = {
   type: "loaded";
-  data: IDataFrame;
+  data: IDataFrame<number, Row>;
   ui: UIState;
 } & RoutingState
 
@@ -55,7 +56,7 @@ export type ErrorState = {
 const covidSizeEstimate = 2459742;
 const populationSizeEstimate = 487991;
 const usDataEstimate = 679331;
-const stateInfoEstimate = 25842;
+const stateInfoEstimate = 30102;
 
 export const initialState: State = {
   type: "loading",
