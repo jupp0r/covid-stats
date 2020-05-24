@@ -1,12 +1,9 @@
-import { initialState, State, LoadedState, LoadingState } from "../store";
+import { filter,includes } from "lodash/fp";
 
 import { Action } from "../actions";
+import { initialState, LoadedState, LoadingState,State } from "../store";
 import { transformCsvData } from "../store/data";
-
 import { assertNever } from "../utils";
-
-import { includes, filter } from "lodash/fp";
-
 import { getPickedCountriesFromUrl, updateCountriesInPathName } from "./router";
 
 const errorReducer = (state: State, action: Action): State => state;

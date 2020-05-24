@@ -1,19 +1,15 @@
+import { Checkbox, List, ListItem, TextField } from "@material-ui/core";
+import { IDataFrame } from "data-forge";
+import { includes } from "lodash/fp";
 import React, { CSSProperties } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import { LoadedState } from "../store";
-
+import { useDispatch,useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
-import { includes } from "lodash/fp";
 import {
   makeCountryToggleAction,
   makeCoutrySearchChangedAction,
 } from "../actions";
-import { IDataFrame } from "data-forge";
-
-import { List, ListItem, Checkbox, TextField } from "@material-ui/core";
-
+import { LoadedState } from "../store";
 import { SpacedPaper } from "./SpacedPaper";
 
 const dataSelector = (state: LoadedState) => state.data;

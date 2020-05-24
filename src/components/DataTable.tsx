@@ -1,11 +1,4 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import MaterialTable, { Icons, Column } from "material-table";
-import { SpacedPaper } from "./SpacedPaper";
-import { LoadedState } from "../store";
-
-import { forwardRef } from "react";
-
+import { Checkbox } from "@material-ui/core";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Check from "@material-ui/icons/Check";
@@ -21,16 +14,19 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
-import { ToggleButtonGroup, ToggleButton } from "@material-ui/lab";
+import { ToggleButton,ToggleButtonGroup } from "@material-ui/lab";
+import { IDataFrame } from "data-forge";
+import { includes } from "lodash/fp";
+import MaterialTable, { Column,Icons } from "material-table";
+import React from "react";
+import { forwardRef } from "react";
+import { useDispatch,useSelector } from "react-redux";
 
 import { makeDataTableDateSelectionChangedAction } from "../actions";
-
-import { IDataFrame } from "data-forge";
-import { Checkbox } from "@material-ui/core";
-import { includes } from "lodash/fp";
-
 import { makeCountryToggleAction } from "../actions";
+import { LoadedState } from "../store";
 import { Row } from "../store/data";
+import { SpacedPaper } from "./SpacedPaper";
 
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),

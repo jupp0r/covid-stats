@@ -1,9 +1,8 @@
-import { Action } from "../actions";
-import { State } from "../store";
-
 import { Store } from "redux";
 
+import { Action } from "../actions";
 import { makeUrlUpdated } from "../actions";
+import { State } from "../store";
 import { defaultCountries } from "../store";
 
 

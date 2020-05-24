@@ -1,7 +1,7 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { ErrorState } from "../store";
-import { useSelector } from "react-redux";
 
 export const Error = () => {
   const message = useSelector((state: ErrorState) => state.message);

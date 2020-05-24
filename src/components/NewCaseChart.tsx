@@ -1,22 +1,21 @@
-import React from "react";
 import { Grid } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { red } from "@material-ui/core/colors";
 import { IDataFrame } from "data-forge";
-import { createSelector } from "reselect";
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { smooth } from "../store/data";
-import { SpacedPaper } from "./SpacedPaper";
+import React from "react";
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
+
 import {
-  pickedCountriesSelector,
-  dataSelector,
   colorMapSelector,
   countryNameSelector,
+  dataSelector,
+  pickedCountriesSelector,
 } from "../selectors";
-
+import { smooth } from "../store/data";
 import { Row } from "../store/data";
-
-import { red } from "@material-ui/core/colors";
+import { SpacedPaper } from "./SpacedPaper";
 
 const newSelector = (selector: (row: any) => number, title: string) => (
   pickedCountries: string[],

@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { reducer } from "../reducers/reducers";
-import { createEpicMiddleware } from "redux-observable";
-import { rootEpic } from "../epics";
-import { makeInitialized } from "../actions";
 import { IDataFrame } from "data-forge";
 import { Store as ReduxStore } from "redux";
+import { createEpicMiddleware } from "redux-observable";
+
+import { makeInitialized } from "../actions";
 import { Action } from "../actions";
+import { rootEpic } from "../epics";
+import { reducer } from "../reducers/reducers";
 import { setupRouting } from "../reducers/router";
 import { Row } from "./data";
 

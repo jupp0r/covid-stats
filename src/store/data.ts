@@ -1,6 +1,6 @@
+import { fromCSV, IDataFrame, Series } from "data-forge";
 import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
-import { fromCSV, IDataFrame, Series } from "data-forge";
 
 export interface Row {
   date: Date;

@@ -1,23 +1,19 @@
-import React from "react";
-
+import { useMediaQuery } from "@material-ui/core";
+import { IDataFrame } from "data-forge";
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import React from "react";
 import { useSelector } from "react-redux";
-import { IDataFrame } from "data-forge";
 import { createSelector } from "reselect";
 
-import { useMediaQuery } from "@material-ui/core";
-
-import { smooth } from "../store/data";
-
-import { SpacedPaper } from "./SpacedPaper";
-
 import {
-  pickedCountriesSelector,
-  dataSelector,
   colorMapSelector,
   countryNameSelector,
+  dataSelector,
+  pickedCountriesSelector,
 } from "../selectors";
+import { smooth } from "../store/data";
+import { SpacedPaper } from "./SpacedPaper";
 
 const deathCurveSelector = (
   pickedCountries: string[],

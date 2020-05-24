@@ -1,7 +1,8 @@
-import { Observable, merge } from "rxjs";
-import { filter, flatMap, map } from "rxjs/operators";
 import { IDataFrame } from "data-forge";
-import { Action, ProgressAction, makeProgressAction, DownloadCategory } from "../actions";
+import { merge,Observable } from "rxjs";
+import { filter, flatMap, map } from "rxjs/operators";
+
+import { Action, DownloadCategory,makeProgressAction, ProgressAction } from "../actions";
 
 export type DataResult =
   | { type: "success"; data: IDataFrame }

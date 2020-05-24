@@ -1,9 +1,8 @@
 import { IDataFrame } from "data-forge";
-
-import { LoadedState } from "../store";
-
 import { createSelector } from "reselect";
+
 import { makeCountryColors } from "../components/countryColors";
+import { LoadedState } from "../store";
 
 export const dataSelector = (state: LoadedState) => state.data;
 export const pickedCountriesSelector = (state: LoadedState) =>

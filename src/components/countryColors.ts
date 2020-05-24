@@ -1,19 +1,18 @@
 import {
-  red,
+  amber,
+  blue,
+  blueGrey,
+  brown,
+  cyan,
+  green,
+  grey,
+  lime,
+  orange,
   pink,
   purple,
-  blue,
-  cyan,
+  red,
   teal,
-  green,
-  lime,
-  amber,
-  orange,
-  brown,
-  grey,
-  blueGrey,
 } from "@material-ui/core/colors";
-
 import { murmur3 } from "murmurhash-js";
 
 const colors = [

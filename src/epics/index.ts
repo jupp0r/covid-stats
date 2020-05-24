@@ -1,21 +1,17 @@
-import { Observable, zip, merge } from "rxjs";
-
+import { ofType } from 'redux-observable';
+import { combineEpics } from "redux-observable";
+import { merge,Observable, zip } from "rxjs";
 import { filter, map } from "rxjs/operators";
 
-import { ofType } from 'redux-observable';
-
 import { Action, ProgressAction } from "../actions";
-
-import { combineEpics } from "redux-observable";
-
 import {
+  mergeData,
   parseCovidCSV,
   parsePopulationCSV,
   parseUsCSV,
   parseUsStateInfoCSV,
-  mergeData,
 } from "../store/data";
-import { makeProgressStream, DataResult } from "./util";
+import { DataResult,makeProgressStream } from "./util";
 
 export const startLoadingEpic = (
   action$: Observable<Action>,

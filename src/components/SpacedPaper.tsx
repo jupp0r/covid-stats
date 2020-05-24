@@ -1,14 +1,13 @@
-import React from "react";
-
 import {
   Box,
+  createStyles,
   Paper,
   PaperProps,
-  withStyles,
-  createStyles,
-  WithStyles,
   useMediaQuery,
+  WithStyles,
+  withStyles,
 } from "@material-ui/core";
+import React from "react";
 
 const withPadding = createStyles({
   paperPadding: {
