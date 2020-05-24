@@ -15,9 +15,10 @@ import {
   pickedCountriesSelector,
 } from "../selectors";
 import { LoadedState } from "../store";
+import { Row } from "../store/data"
 import { SpacedPaper } from "./SpacedPaper";
 
-const selectDataToRenderIntoChart = (dataSelector: (row: any) => number) => (
+const selectDataToRenderIntoChart = (dataSelector: (row: Row) => number) => (
   pickedCountries: string[],
   data: IDataFrame,
   colorMap: Map<string, string>,
@@ -26,7 +27,7 @@ const selectDataToRenderIntoChart = (dataSelector: (row: any) => number) => (
   pickedCountries.map((pickedCountry: string) => ({
     name: countryNameMap.get(pickedCountry) || "",
     data: data
-      .where(row => row.iso_code === pickedCountry)
+      .where(row => row.isoCode === pickedCountry)
       .toArray()
       .map(row => [row.date.getTime(), dataSelector(row)]),
     type: "line",
@@ -70,7 +71,7 @@ const makeHighchartsOptions = ({
   },
 });
 
-export const CaseChart = () => {
+export const CaseChart = (): JSX.Element => {
   const cases = useSelector(
     createSelector(
       pickedCountriesSelector,
@@ -78,7 +79,7 @@ export const CaseChart = () => {
       colorMapSelector,
       countryNameSelector,
       selectDataToRenderIntoChart(
-        row => (row.total_cases * 1000000) / row.population,
+        row => (row.totalCases * 1000000) / row.population,
       ),
     ),
   );
@@ -87,7 +88,7 @@ export const CaseChart = () => {
   );
 
   const dispatch = useDispatch();
-  const handleAxisLogarithmicToggle = (_: any, newSetting: string | null) => {
+  const handleAxisLogarithmicToggle = (_: React.MouseEvent, newSetting: string | null): void => {
     if (!newSetting) {
       return;
     }
@@ -123,7 +124,7 @@ export const CaseChart = () => {
   );
 };
 
-export const DeathChart = () => {
+export const DeathChart = (): JSX.Element => {
   const cases = useSelector(
     createSelector(
       pickedCountriesSelector,
@@ -131,7 +132,7 @@ export const DeathChart = () => {
       colorMapSelector,
       countryNameSelector,
       selectDataToRenderIntoChart(
-        row => (row.total_deaths * 1000000) / row.population,
+        row => (row.totalDeaths * 1000000) / row.population,
       ),
     ),
   );
@@ -143,7 +144,7 @@ export const DeathChart = () => {
   const options = makeHighchartsOptions({ logAxisSetting, cases, wide });
 
   const dispatch = useDispatch();
-  const handleAxisLogarithmicToggle = (_: any, newSetting: string | null) => {
+  const handleAxisLogarithmicToggle = (_: React.MouseEvent, newSetting: string | null): void => {
     if (!newSetting) {
       return;
     }

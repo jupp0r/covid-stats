@@ -14,19 +14,23 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
-import { ToggleButton,ToggleButtonGroup } from "@material-ui/lab";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { IDataFrame } from "data-forge";
 import { includes } from "lodash/fp";
-import MaterialTable, { Column,Icons } from "material-table";
+import MaterialTable, { Column, Icons } from "material-table";
 import React from "react";
 import { forwardRef } from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { makeDataTableDateSelectionChangedAction } from "../actions";
 import { makeCountryToggleAction } from "../actions";
 import { LoadedState } from "../store";
 import { Row } from "../store/data";
 import { SpacedPaper } from "./SpacedPaper";
+
+type TableRow = Row & {
+  "testsPer1MPopulation": string;
+}
 
 const tableIcons: Icons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -52,18 +56,18 @@ const tableIcons: Icons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
-const datesAreOnSameDay = (first: Date, second: Date) =>
+const datesAreOnSameDay = (first: Date, second: Date): boolean =>
   first.getFullYear() === second.getFullYear() &&
   first.getMonth() === second.getMonth() &&
   first.getDate() === second.getDate();
 
-export const DataTable = () => {
+export const DataTable = (): JSX.Element => {
   const data = useSelector((state: LoadedState) => state.data);
 
-  const pickedCountriesSelector = (state: LoadedState) =>
+  const pickedCountriesSelector = (state: LoadedState): string[] =>
     state.ui.pickedCountries;
   const pickedCountries = useSelector(pickedCountriesSelector);
-  const isSelected = (iso_code: string) => includes(iso_code)(pickedCountries);
+  const isSelected = (isoCode: string): boolean => includes(isoCode)(pickedCountries);
 
   const dateToDisplay = useSelector(
     (state: LoadedState) => state.ui.dataTable.dateToDisplay,
@@ -71,7 +75,7 @@ export const DataTable = () => {
 
   const today = new Date();
   const dateOffset = 24 * 60 * 60 * 1000 * 1; // 1 day
-  let yesterday = new Date();
+  const yesterday = new Date();
   yesterday.setTime(yesterday.getTime() - dateOffset);
 
   const selectedDate = dateToDisplay === "today" ? today : yesterday;
@@ -80,7 +84,7 @@ export const DataTable = () => {
     group: IDataFrame<number, Row>,
     date: Date,
     field: keyof Row,
-  ) => {
+  ): string | number | Date | undefined => {
     const filtered: IDataFrame<
       number,
       Row
@@ -105,15 +109,15 @@ export const DataTable = () => {
 
   const tableData = data
     .orderByDescending((row: Row) => row.date)
-    .groupBy((row: Row) => row.iso_code)
+    .groupBy((row: Row) => row.isoCode)
     .select(group => ({
       date: group.first().date,
-      iso_code: group.first().iso_code,
+      isoCode: group.first().isoCode,
       location: group.first().location,
-      total_cases: findFirstRowMachingDate(group, selectedDate, "total_cases"),
-      new_cases: findFirstRowMachingDate(group, selectedDate, "new_cases"),
-      total_tests: group
-        .getSeries("total_tests")
+      totalCases: findFirstRowMachingDate(group, selectedDate, "totalCases") as number,
+      newCases: findFirstRowMachingDate(group, selectedDate, "newCases") as number,
+      totalTests: group
+        .getSeries("totalTests")
         .select(x => (x ? x : 0))
         .max(),
       population: group.first().population,
@@ -122,23 +126,23 @@ export const DataTable = () => {
     .map(row => ({
       ...row,
       date: row.date.toString(),
-      tests_per_1m_population: Math.round(
-        (row.total_tests * 1000000) / row.population,
+      testsPer1MPopulation: Math.round(
+        (row.totalTests * 1000000) / row.population,
       ),
     }));
 
-  const numberWithCommas = (field: string) => (rowData: any) =>
-    rowData[field].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const numberWithCommas = (field: keyof typeof tableData[0]) => (rowData: typeof tableData[0]): string =>
+    rowData[field].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
-  const columns: Column<any>[] = [
+  const columns: Column<typeof tableData[0]>[] = [
     {
       title: "Country",
       field: "location",
-      render: (row: Row) => (
+      render: (row: typeof tableData[0]): JSX.Element => (
         <>
           <Checkbox
-            checked={isSelected(row.iso_code)}
-            onChange={_ => dispatch(makeCountryToggleAction(row.iso_code))}
+            checked={isSelected(row.isoCode)}
+            onChange={(_): void => { dispatch(makeCountryToggleAction(row.isoCode)); }}
           />{" "}
           {row.location}
         </>
@@ -146,33 +150,33 @@ export const DataTable = () => {
     },
     {
       title: "Total Cases",
-      field: "total_cases",
+      field: "totalCases",
       type: "numeric",
       defaultSort: "desc",
-      render: numberWithCommas("total_cases"),
+      render: numberWithCommas("totalCases"),
     },
     {
       title: "New Cases",
-      field: "new_cases",
+      field: "newCases",
       type: "numeric",
-      render: numberWithCommas("new_cases"),
+      render: numberWithCommas("newCases"),
     },
     {
       title: "Tests per 1M population",
-      field: "tests_per_1m_population",
+      field: "testsPer1MPopulation",
       type: "numeric",
-      render: numberWithCommas("tests_per_1m_population"),
+      render: numberWithCommas("testsPer1MPopulation"),
     },
     {
       title: "Total Tests",
-      field: "total_tests",
+      field: "totalTests",
       type: "numeric",
-      render: numberWithCommas("total_tests"),
+      render: numberWithCommas("totalTests"),
     },
   ];
 
   const dispatch = useDispatch();
-  const handleDateSelection = (_: any, newSetting: string | null) => {
+  const handleDateSelection = (_: React.MouseEvent, newSetting: string | null): void => {
     if (!newSetting) {
       return;
     }

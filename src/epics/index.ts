@@ -53,7 +53,7 @@ export const startLoadingEpic = (
     ofType("progress"),
   );
 
-  const filterForResult = (data$: Observable<ProgressAction | DataResult>) =>
+  const filterForResult = (data$: Observable<ProgressAction | DataResult>): Observable<ProgressAction | DataResult> =>
     data$.pipe(filter(item => item.type === "success"));
 
   const combinedResults$: Observable<Action> = zip(

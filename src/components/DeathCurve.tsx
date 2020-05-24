@@ -22,13 +22,13 @@ const deathCurveSelector = (
   countryNameMap: Map<string, string>,
 ): SeriesOptionsType[] =>
   pickedCountries.map(country => {
-    const filteredByCountry = data.where(row => row.iso_code === country);
+    const filteredByCountry = data.where(row => row.isoCode === country);
 
     const deaths = filteredByCountry.select(row => ({
-      iso_code: row.iso_code,
-      total_deaths: row.total_deaths,
+      isoCode: row.isoCode,
+      totalDeaths: row.totalDeaths,
       population: row.population,
-      new_deaths: row.new_deaths,
+      newDeaths: row.newDeaths,
     }));
 
     return {
@@ -40,15 +40,15 @@ const deathCurveSelector = (
         deaths
           .toArray()
           .map(row => [
-            row.total_deaths / row.population,
-            row.new_deaths / row.population,
+            row.totalDeaths / row.population,
+            row.newDeaths / row.population,
           ])
           .sort(([a, _], [b, __]) => (a < b ? -1 : 1)),
       ).filter(([x, y]) => x !== 0 && y !== 0),
     };
   });
 
-export const DeathCurve = () => {
+export const DeathCurve = (): JSX.Element => {
   const deaths = useSelector(
     createSelector(
       pickedCountriesSelector,
@@ -78,7 +78,7 @@ export const DeathCurve = () => {
       tickInterval: 0.1,
       labels: {
         step: wide ? 1 : 5,
-        formatter: function () {
+        formatter: function (): string {
           return this.value.toExponential(1);
         },
         rotation: -45,
@@ -92,7 +92,7 @@ export const DeathCurve = () => {
       tickInterval: 0.1,
       labels: {
         step: 1,
-        formatter: function () {
+        formatter: function (): string {
           return this.value.toExponential(1);
         },
       },

@@ -1,3 +1,3 @@
 import React from "react";
 
-export const NewTestChart = () => <div>new tests</div>;
+export const NewTestChart = (): JSX.Element => <div>new tests</div>;

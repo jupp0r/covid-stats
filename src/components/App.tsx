@@ -11,7 +11,7 @@ import { Error } from "./Error";
 import { Loaded } from "./Loaded";
 import { Loading } from "./Loading";
 
-export const App = () => {
+export const App = (): JSX.Element => {
   const type = useSelector<State, State["type"]>(state => state.type);
 
   return (
@@ -25,7 +25,7 @@ export const App = () => {
         Fork me on GitHub
       </a>
       <Box px={3} py={3} my={3} textAlign="center">
-        {((type: State["type"]) => {
+        {((type: State["type"]): JSX.Element => {
           switch (type) {
             case "loading":
               return <Loading />;

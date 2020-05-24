@@ -35,7 +35,7 @@ export const getPickedCountriesFromUrl = (urlString: string): string[] => {
   return parsedCountries;
 };
 
-export const setupRouting = (store: Store<State, Action>) => {
+export const setupRouting = (store: Store<State, Action>): void => {
   window.addEventListener("popstate", () => {
     store.dispatch(makeUrlUpdated(window.location.toString()));
   });

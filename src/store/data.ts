@@ -4,45 +4,54 @@ import { map } from "rxjs/operators";
 
 export interface Row {
   date: Date;
-  iso_code: string;
+  isoCode: string;
   location: string;
-  total_cases: number;
-  new_cases: number;
-  total_deaths: number;
-  new_deaths: number;
-  total_tests: number;
-  new_tests: number;
+  totalCases: number;
+  newCases: number;
+  totalDeaths: number;
+  newDeaths: number;
+  totalTests: number;
+  newTests: number;
   population: number;
-  location_type: "country" | "us-state";
+  locationType: "country" | "us-state";
 }
 
 interface CovidRow {
   date: Date;
-  iso_code: string;
+  isoCode: string;
   location: string;
-  total_cases: number;
-  new_cases: number;
-  total_deaths: number;
-  new_deaths: number;
-  total_tests: number;
-  new_tests: number;
+  totalCases: number;
+  newCases: number;
+  totalDeaths: number;
+  newDeaths: number;
+  totalTests: number;
+  newTests: number;
 }
 
 interface PopulationRow {
-  iso_code: string;
+  isoCode: string;
   population: number;
   year: number;
 }
 
 export const parseCovidCSV = (data: string): Observable<IDataFrame> =>
   of(fromCSV(data)).pipe(
+    map((df: IDataFrame): IDataFrame => df.renameSeries({
+      "iso_code": "isoCode",
+      "total_cases": "totalCases",
+      "new_cases": "newCases",
+      "total_deaths": "totalCases",
+      "new_deaths": "newDeaths",
+      "total_tests": "totalTests",
+      "new_tests": "newTests",
+    })),
     map((df: IDataFrame): IDataFrame => df.parseDates("date")),
-    map((df: IDataFrame): IDataFrame => df.parseInts("total_cases")),
-    map((df: IDataFrame): IDataFrame => df.parseInts("new_cases")),
-    map((df: IDataFrame): IDataFrame => df.parseInts("total_deaths")),
-    map((df: IDataFrame): IDataFrame => df.parseInts("new_deaths")),
-    map((df: IDataFrame): IDataFrame => df.parseInts("total_tests")),
-    map((df: IDataFrame): IDataFrame => df.parseInts("new_tests")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("totalCases")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("newCases")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("totalDeaths")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("newDeaths")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("totalTests")),
+    map((df: IDataFrame): IDataFrame => df.parseInts("newTests")),
   );
 
 export const parsePopulationCSV = (data: string): Observable<IDataFrame> =>
@@ -52,7 +61,7 @@ export const parsePopulationCSV = (data: string): Observable<IDataFrame> =>
       (df: IDataFrame): IDataFrame =>
         df.renameSeries({
           Year: "year",
-          "Country Code": "iso_code",
+          "Country Code": "isoCode",
           Value: "population",
         }),
     ),
@@ -66,35 +75,35 @@ export const parseUsCSV = (data: string): Observable<IDataFrame> =>
     map(
       (df: IDataFrame): IDataFrame =>
         df.renameSeries({
-          state: "iso_code",
-          positive: "total_cases",
-          positiveIncrease: "new_cases",
-          death: "total_deaths",
-          deathIncrease: "new_deaths",
-          totalTestResults: "total_tests",
-          totalTestResultsIncrease: "new_tests",
+          state: "isoCode",
+          positive: "totalCases",
+          positiveIncrease: "newCases",
+          death: "totalDeaths",
+          deathIncrease: "newDeaths",
+          totalTestResults: "totalTests",
+          totalTestResultsIncrease: "newTests",
         }),
     ),
     map(
       (df: IDataFrame): IDataFrame =>
         df.transformSeries({
-          total_cases: replaceEmptyBy0,
-          new_cases: replaceEmptyBy0,
-          total_deaths: replaceEmptyBy0,
-          new_deaths: replaceEmptyBy0,
-          total_tests: replaceEmptyBy0,
-          new_tests: replaceEmptyBy0,
+          totalCases: replaceEmptyBy0,
+          newCases: replaceEmptyBy0,
+          totalDeaths: replaceEmptyBy0,
+          newDeaths: replaceEmptyBy0,
+          totalTests: replaceEmptyBy0,
+          newTests: replaceEmptyBy0,
         }),
     ),
     map(
       (df: IDataFrame): IDataFrame =>
         df.parseInts([
-          "total_cases",
-          "new_cases",
-          "total_deaths",
-          "new_deaths",
-          "total_tests",
-          "new_tests",
+          "totalCases",
+          "newCases",
+          "totalDeaths",
+          "newDeaths",
+          "totalTests",
+          "newTests",
         ]),
     ),
   );
@@ -115,12 +124,12 @@ type Accumulator = {
 
 const computeLatestPopulation = (population: IDataFrame): IDataFrame =>
   population
-    .groupBy(row => row.iso_code)
+    .groupBy(row => row.isoCode)
     .select(group => {
       const { year: maxYear } = group.summarize({ year: Series.max });
       const pop = group.where(row => row.year === maxYear).first().population;
       return {
-        iso_code: group.first().iso_code,
+        isoCode: group.first().isoCode,
         population: pop,
       };
     })
@@ -136,24 +145,24 @@ export const mergeData = (
 
   const joinedUsData: IDataFrame<number, Row> = us.join(
     stateInfo,
-    row => row.iso_code,
+    row => row.isoCode,
     row => row.code,
     (dataRow, infoRow) => ({
       ...dataRow,
       location: infoRow ? infoRow.state : "unknown location name",
       population: infoRow.population,
-      location_type: "us-state",
+      locationType: "us-state",
     }),
   );
 
   const joinedWorldData: IDataFrame<number, Row> = covid.join(
     populationLatest,
-    (covid: CovidRow) => covid.iso_code,
-    (pop: PopulationRow) => pop.iso_code,
+    (covid: CovidRow) => covid.isoCode,
+    (pop: PopulationRow) => pop.isoCode,
     (covid: CovidRow, pop: PopulationRow | null) => ({
       ...covid,
       population: pop ? pop.population : 0,
-      location_type: "country",
+      locationType: "country",
     }),
   );
 
@@ -164,9 +173,9 @@ export const mergeData = (
 
 export const smooth = (amount: number, series: number[][]): number[][] => {
   amount = Math.ceil(Math.abs(amount));
-  let results: Array<Array<number>> = [];
+  const results: Array<Array<number>> = [];
   for (let i = 0; i < series.length; i++) {
-    let [x] = series[i];
+    const [x] = series[i];
 
     let valuesInAverage = 0;
     let sum = 0;

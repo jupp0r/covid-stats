@@ -8,7 +8,7 @@ import { NewCaseChart, NewDeathChart } from "./NewCaseChart";
 
 const centered: React.CSSProperties = { textAlign: "center" };
 
-export const Loaded = () => {
+export const Loaded = (): JSX.Element => {
   return (
     <div>
       <h1>Covid Stats</h1>

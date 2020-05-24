@@ -17,12 +17,12 @@ import { smooth } from "../store/data";
 import { Row } from "../store/data";
 import { SpacedPaper } from "./SpacedPaper";
 
-const newSelector = (selector: (row: any) => number, title: string) => (
+const newSelector = (selector: (row: Row) => number, title: string) => (
   pickedCountries: string[],
   data: IDataFrame,
   colorMap: Map<string, string>,
   countryNameMap: Map<string, string>,
-) =>
+): JSX.Element[] =>
   pickedCountries.map(country => {
     const countryData = {
       name: countryNameMap.get(country),
@@ -31,7 +31,7 @@ const newSelector = (selector: (row: any) => number, title: string) => (
       data: data
         .where(
           (row: Row) =>
-            row.iso_code === country && row.date > new Date(2020, 2, 14),
+            row.isoCode === country && row.date > new Date(2020, 2, 14),
         )
         .toArray()
         .map(row => [row.date.getTime(), selector(row)])
@@ -80,7 +80,7 @@ const newSelector = (selector: (row: any) => number, title: string) => (
     );
   });
 
-export const NewCaseChart = () => {
+export const NewCaseChart = (): JSX.Element => {
   const countryCharts = useSelector(
     createSelector(
       pickedCountriesSelector,
@@ -88,7 +88,7 @@ export const NewCaseChart = () => {
       colorMapSelector,
       countryNameSelector,
       newSelector(
-        (row: Row) => (row.new_cases * 1000000) / row.population,
+        (row: Row) => (row.newCases * 1000000) / row.population,
         "daily new cases per 1M population",
       ),
     ),
@@ -104,7 +104,7 @@ export const NewCaseChart = () => {
   );
 };
 
-export const NewDeathChart = () => {
+export const NewDeathChart = (): JSX.Element => {
   const countryCharts = useSelector(
     createSelector(
       pickedCountriesSelector,
@@ -112,7 +112,7 @@ export const NewDeathChart = () => {
       colorMapSelector,
       countryNameSelector,
       newSelector(
-        (row: Row) => (row.new_deaths * 1000000) / row.population,
+        (row: Row) => (row.newDeaths * 1000000) / row.population,
         "daily new deaths per 1M population",
       ),
     ),

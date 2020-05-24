@@ -31,11 +31,11 @@ const colors = [
   blueGrey,
 ];
 
-const shades = [300, 600];
+const shades: (300 | 600)[] = [300, 600];
 
 export const makeCountryColors = (isoCodes: string[]): Map<string, string> => {
-  let results = new Map<string, string>();
-  let pickedColors = new Set<string>();
+  const results = new Map<string, string>();
+  const pickedColors = new Set<string>();
 
   isoCodes.forEach(country => {
     let picked = "undefined";
@@ -45,10 +45,10 @@ export const makeCountryColors = (isoCodes: string[]): Map<string, string> => {
     // unless collisions are unavoidable with many countries
     do {
       hash = murmur3(hash.toString());
-      const color = colors[hash % colors.length];
-      const shade = shades[hash % shades.length];
+      const color: typeof colors[0] = colors[hash % colors.length];
+      const shade: keyof typeof colors[0] = shades[hash % shades.length];
 
-      picked = (color as any)[shade.toString()];
+      picked = color[shade];
  
     } while (pickedColors.has(picked) && pickedColors.size < colors.length * shades.length);
    

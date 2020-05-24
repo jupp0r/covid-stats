@@ -13,8 +13,8 @@ import { Row } from "./data";
 export type State = (LoadingState | LoadedState | ErrorState);
 interface RoutingState {
   routing: {
-    url: string,
-  }
+    url: string;
+  };
 }
 
 interface Progress {

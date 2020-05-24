@@ -5,10 +5,10 @@ import { useSelector } from "react-redux";
 import { LoadingState } from "../store";
 import { SpacedPaper } from "./SpacedPaper";
 
-export const Loading = () => {
+export const Loading = (): JSX.Element => {
   const progress = useSelector((state: LoadingState) => state.progress);
 
-  const normalize = ({ done, total }: { done: number; total: number }) =>
+  const normalize = ({ done, total }: { done: number; total: number }): number =>
     (done / total) * 100;
 
   return (

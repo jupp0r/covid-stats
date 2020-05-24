@@ -38,11 +38,17 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.ts,.tsx"
   },
   "eslintConfig": {
-    "extends": "react-app",
-    "plugins": ["simple-import-sort"],
+    "extends": [
+      "react-app",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+      "simple-import-sort"
+    ],
     "rules": {
       "simple-import-sort/sort": "error"
     }
@@ -64,7 +70,14 @@
     "@types/murmurhash-js": "^1.0.3",
     "@types/papaparse": "^5.0.3",
     "@types/react-redux": "^7.1.7",
-    "eslint-plugin-simple-import-sort": "^5.0.3"
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "husky": "^4.2.5"
   },
-  "homepage": "/covid-stats"
+  "homepage": "/covid-stats",
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build && yarn lint",
+      "pre-push": "yarn build && yarn lint"
+    }
+  }
 }

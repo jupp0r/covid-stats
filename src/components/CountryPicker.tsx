@@ -2,7 +2,7 @@ import { Checkbox, List, ListItem, TextField } from "@material-ui/core";
 import { IDataFrame } from "data-forge";
 import { includes } from "lodash/fp";
 import React, { CSSProperties } from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
 import {
@@ -12,10 +12,10 @@ import {
 import { LoadedState } from "../store";
 import { SpacedPaper } from "./SpacedPaper";
 
-const dataSelector = (state: LoadedState) => state.data;
-const pickedCountriesSelector = (state: LoadedState) =>
+const dataSelector = (state: LoadedState): IDataFrame => state.data;
+const pickedCountriesSelector = (state: LoadedState): string[] =>
   state.ui.pickedCountries;
-const searchTextSelector = (state: LoadedState) => state.ui.searchText;
+const searchTextSelector = (state: LoadedState): string => state.ui.searchText;
 
 const countrySelector = createSelector(
   dataSelector,
@@ -24,17 +24,17 @@ const countrySelector = createSelector(
   (data: IDataFrame, pickedCountries: string[], searchText) =>
     data
       .select(
-        ({ iso_code, location }: { iso_code: string; location: string }) => ({
-          iso_code,
+        ({ isoCode, location }: { isoCode: string; location: string }) => ({
+          isoCode,
           location,
         }),
       )
-      .distinct(row => row.iso_code)
+      .distinct(row => row.isoCode)
       .orderBy(row => row.location)
       .toPairs()
       .map(([_, row]) => ({
         ...row,
-        active: includes(row.iso_code)(pickedCountries),
+        active: includes(row.isoCode)(pickedCountries),
       }))
       .filter(
         row =>
@@ -44,7 +44,7 @@ const countrySelector = createSelector(
       ),
 );
 
-export const CountryPicker = () => {
+export const CountryPicker = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const autoWidthItem: CSSProperties = {
@@ -52,11 +52,11 @@ export const CountryPicker = () => {
   };
 
   const allCountries = useSelector(countrySelector).map(
-    ({ iso_code, location, active }) => (
+    ({ isoCode, location, active }) => (
       <ListItem
         button
-        key={iso_code}
-        onClick={_ => dispatch(makeCountryToggleAction(iso_code))}
+        key={isoCode}
+        onClick={(_): void => { dispatch(makeCountryToggleAction(isoCode)); }}
         style={autoWidthItem}
       >
         <Checkbox
@@ -64,7 +64,7 @@ export const CountryPicker = () => {
           checked={active}
           tabIndex={-1}
           disableRipple
-          inputProps={{ "aria-labelledby": iso_code }}
+          inputProps={{ "aria-labelledby": isoCode }}
         />
         {location}
       </ListItem>
@@ -89,8 +89,8 @@ export const CountryPicker = () => {
           type="text"
           name="search"
           placeholder="Search Countries"
-          onChange={e =>
-            dispatch(makeCoutrySearchChangedAction(e.target.value))
+          onChange={
+            (e): void => { dispatch(makeCoutrySearchChangedAction(e.target.value)); }
           }
           value={searchText}
         />
