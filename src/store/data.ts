@@ -40,7 +40,7 @@ export const parseCovidCSV = (data: string): Observable<IDataFrame> =>
       "iso_code": "isoCode",
       "total_cases": "totalCases",
       "new_cases": "newCases",
-      "total_deaths": "totalCases",
+      "total_deaths": "totalDeaths",
       "new_deaths": "newDeaths",
       "total_tests": "totalTests",
       "new_tests": "newTests",
