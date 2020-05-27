@@ -4,7 +4,7 @@ import { IDataFrame } from "data-forge";
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
 import { makeCaseChartLogSettingChangedAction } from "../actions";
@@ -38,10 +38,12 @@ const makeHighchartsOptions = ({
   logAxisSetting,
   cases,
   wide,
+  yAxisLabel,
 }: {
   logAxisSetting: "linear" | "logarithmic";
   cases: SeriesOptionsType[];
   wide: boolean;
+  yAxisLabel: string;
 }): Highcharts.Options => ({
   chart: {
     height: wide ? "50%" : "100%",
@@ -62,7 +64,7 @@ const makeHighchartsOptions = ({
   yAxis: {
     type: logAxisSetting,
     title: {
-      text: "Cases per 1M population",
+      text: yAxisLabel,
     },
   },
   series: cases,
@@ -101,7 +103,7 @@ export const CaseChart = (): JSX.Element => {
   };
 
   const wide = useMediaQuery("(min-width:600px)");
-  const options = makeHighchartsOptions({ logAxisSetting, cases, wide });
+  const options = makeHighchartsOptions({ logAxisSetting, cases, wide, yAxisLabel: "Cases per 1M population" });
 
   return (
     <SpacedPaper id="cases" elevation={3}>
@@ -112,12 +114,13 @@ export const CaseChart = (): JSX.Element => {
         exclusive
         aria-label="log axis setting"
       >
-        <ToggleButton value="logarithmic" aria-label="logarithmic">
-          log
-        </ToggleButton>
         <ToggleButton value="linear" aria-label="linear">
           linear
         </ToggleButton>
+        <ToggleButton value="logarithmic" aria-label="logarithmic">
+          log
+        </ToggleButton>
+
       </ToggleButtonGroup>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </SpacedPaper>
@@ -141,7 +144,7 @@ export const DeathChart = (): JSX.Element => {
   );
 
   const wide = useMediaQuery("(min-width:600px)");
-  const options = makeHighchartsOptions({ logAxisSetting, cases, wide });
+  const options = makeHighchartsOptions({ logAxisSetting, cases, wide, yAxisLabel: "Deaths per 1M population" });
 
   const dispatch = useDispatch();
   const handleAxisLogarithmicToggle = (_: React.MouseEvent, newSetting: string | null): void => {
