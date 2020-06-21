@@ -76,7 +76,7 @@ const newSelector = (selector: (row: Row) => number, title: string) => (
       },
       yAxis: {
         min: 0,
-        max: isSynced ? yAxisMax : undefined,
+        max: isSynced ? yAxisMax : null,
         title: {
           text: title,
         },
