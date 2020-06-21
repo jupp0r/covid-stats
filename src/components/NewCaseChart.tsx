@@ -1,18 +1,21 @@
-import { Grid } from "@material-ui/core";
+import { FormControlLabel, FormGroup, Grid, Switch } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import { IDataFrame } from "data-forge";
 import Highcharts, { SeriesOptionsType } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { max as lMax, round as lRound } from "lodash"
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
+import { makeSyncAxisToggleAction, SyncAxisToggleAction } from "../actions";
 import {
   colorMapSelector,
   countryNameSelector,
   dataSelector,
   pickedCountriesSelector,
 } from "../selectors";
+import { LoadedState } from "../store";
 import { smooth } from "../store/data";
 import { Row } from "../store/data";
 import { SpacedPaper } from "./SpacedPaper";
@@ -22,8 +25,21 @@ const newSelector = (selector: (row: Row) => number, title: string) => (
   data: IDataFrame,
   colorMap: Map<string, string>,
   countryNameMap: Map<string, string>,
-): JSX.Element[] =>
-  pickedCountries.map(country => {
+  isSynced: boolean,
+): JSX.Element[] => {
+  const maxValue =
+    lMax(
+      data
+        .where(
+          (row: Row) => pickedCountries.includes(row.isoCode))
+        .toArray()
+        .map((row: Row) => selector(row)))
+    || 1000;
+
+  const order = Math.pow(10, Math.floor(Math.log10(maxValue)));
+  const yAxisMax = lRound(maxValue + (order / 2), -Math.log10(order));
+
+  return pickedCountries.map(country => {
     const countryData = {
       name: countryNameMap.get(country),
       type: "column",
@@ -60,6 +76,7 @@ const newSelector = (selector: (row: Row) => number, title: string) => (
       },
       yAxis: {
         min: 0,
+        max: isSynced ? yAxisMax : undefined,
         title: {
           text: title,
         },
@@ -78,7 +95,23 @@ const newSelector = (selector: (row: Row) => number, title: string) => (
         <HighchartsReact highcharts={Highcharts} options={options} />
       </Grid>
     );
-  });
+  })
+};
+
+const isSyncedSelector = (state: LoadedState): boolean => state.ui.caseChart.syncAxes;
+
+const SyncSwitch = (): JSX.Element => {
+  const isSynced = useSelector(isSyncedSelector);
+  const dispatch = useDispatch();
+
+  const handleChange = (): SyncAxisToggleAction => dispatch(makeSyncAxisToggleAction());
+
+  return (<FormGroup row>
+    <FormControlLabel
+      control={<Switch checked={isSynced} onChange={handleChange} name="syncAxes" />}
+      label="Sync Axis Range"
+    /></FormGroup>);
+}
 
 export const NewCaseChart = (): JSX.Element => {
   const countryCharts = useSelector(
@@ -87,6 +120,7 @@ export const NewCaseChart = (): JSX.Element => {
       dataSelector,
       colorMapSelector,
       countryNameSelector,
+      isSyncedSelector,
       newSelector(
         (row: Row) => (row.newCases * 1000000) / row.population,
         "daily new cases per 1M population",
@@ -97,6 +131,7 @@ export const NewCaseChart = (): JSX.Element => {
   return (
     <SpacedPaper elevation={3} id="new-cases">
       <h2>New Cases</h2>
+      <SyncSwitch />
       <Grid container justify="center" spacing={0}>
         {countryCharts}
       </Grid>
@@ -111,6 +146,7 @@ export const NewDeathChart = (): JSX.Element => {
       dataSelector,
       colorMapSelector,
       countryNameSelector,
+      isSyncedSelector,
       newSelector(
         (row: Row) => (row.newDeaths * 1000000) / row.population,
         "daily new deaths per 1M population",
@@ -121,6 +157,7 @@ export const NewDeathChart = (): JSX.Element => {
   return (
     <SpacedPaper elevation={3} id="new-deaths">
       <h2>New Deaths</h2>
+      <SyncSwitch />
       <Grid container justify="center" spacing={0}>
         {countryCharts}
       </Grid>

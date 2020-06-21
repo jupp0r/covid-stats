@@ -9,7 +9,8 @@ export type Action =
   | ProgressAction
   | UrlUpdatedAction
   | CaseChartLogSettingChangedAction
-  | DataTableDateSelectionChangedAction;
+  | DataTableDateSelectionChangedAction
+  | SyncAxisToggleAction;
 
 export interface InitialAction {
   type: "initialized";
@@ -110,4 +111,12 @@ export const makeDataTableDateSelectionChangedAction = (
 ): DataTableDateSelectionChangedAction => ({
   type: "data-table-date-selection-changed",
   newSetting,
+});
+
+export interface SyncAxisToggleAction {
+  type: "sync-axis-toggle";
+};
+
+export const makeSyncAxisToggleAction = (): SyncAxisToggleAction => ({
+  type: "sync-axis-toggle",
 });

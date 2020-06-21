@@ -21,6 +21,7 @@ const loadingReducer = (state: LoadingState, action: Action): State => {
           searchText: "",
           caseChart: {
             logSetting: "linear",
+            syncAxes: false,
           },
           dataTable: {
             dateToDisplay: "yesterday",
@@ -99,6 +100,17 @@ const loadedReducer = (state: LoadedState, action: Action): State => {
           },
         },
       };
+    case "sync-axis-toggle":
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          caseChart: {
+            ...state.ui.caseChart,
+            syncAxes: !state.ui.caseChart.syncAxes,
+          }
+        }
+      }
     default:
       return state;
   }

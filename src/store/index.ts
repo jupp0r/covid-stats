@@ -36,6 +36,7 @@ export type UIState = {
   searchText: string;
   caseChart: {
     logSetting: "linear" | "logarithmic";
+    syncAxes: boolean;
   };
   dataTable: {
     dateToDisplay: "today" | "yesterday";
@@ -73,10 +74,14 @@ export const initialState: State = {
 };
 
 export const defaultCountries = [
+         "AZ",
+         "CA",
+         "FL",
+         "OK",
+         "TX",
          "USA",
          "DEU",
          "SWE",
-         "ITA",
          "NGA",
          "RUS",
          "BRA",
